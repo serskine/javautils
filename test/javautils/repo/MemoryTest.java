@@ -73,13 +73,13 @@ public class MemoryTest {
 
         final TestNode expectedNode = new TestNode(new TestNode(new TestNode(null)));
 
-        memory.writeObjectAt(addr1, expectedNode);
-        memory.writeObjectAt(addr2, expectedNode);
-        memory.writeObjectAt(addr3, expectedNode);
+        memory.writeTo(addr1, expectedNode);
+        memory.writeTo(addr2, expectedNode);
+        memory.writeTo(addr3, expectedNode);
 
-        final TestNode observed1 = memory.readObjectAt(addr1, TestNode.class);
-        final TestNode observed2 = memory.readObjectAt(addr2, TestNode.class);
-        final TestNode observed3 = memory.readObjectAt(addr3, TestNode.class);
+        final TestNode observed1 = memory.readFrom(addr1, TestNode.class);
+        final TestNode observed2 = memory.readFrom(addr2, TestNode.class);
+        final TestNode observed3 = memory.readFrom(addr3, TestNode.class);
 
         assertEquals(expectedNode, observed1);
         assertEquals(expectedNode, observed2);
@@ -99,7 +99,7 @@ public class MemoryTest {
 
         logMemoryState(memory);
 
-        memory.writeObjectAt(addr2, expectedNode);
+        memory.writeTo(addr2, expectedNode);
 
     }
 
