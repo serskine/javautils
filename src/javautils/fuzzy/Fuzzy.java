@@ -6,8 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class Fuzzy implements Supplier<Boolean> {
-    public final double probability;
-    private final Set<Consumer<Boolean>> observers = new HashSet<>();
+    private double probability;
 
     @Override
     public Boolean get() {
@@ -31,11 +30,17 @@ public class Fuzzy implements Supplier<Boolean> {
     public static Fuzzy xor(Fuzzy a, Fuzzy b)       {   return and(or(a,b), not(and(a,b)));                         }
     public static Fuzzy implies(Fuzzy a, Fuzzy b)   {   return or(not(a), b);                                       }
 
-
-
     @Override
     public String toString() {
         return String.format("%3.2f%%", probability * 100);
+    }
+
+    public final double getProbability() {
+        return this.probability;
+    }
+
+    public final void setProbability(final double probability) {
+        this.probability = probability;
     }
 
 }
