@@ -1,7 +1,5 @@
 package javautils.ptree;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -188,7 +186,6 @@ public class PTree<K extends Comparable<K>, V> implements Map<Iterable<K>, V> {
     }
 
     @Override
-    @NotNull
     public Set<Iterable<K>> keySet() {
         return this.entrySet().stream()
                 .map(Map.Entry::getKey)
@@ -196,14 +193,12 @@ public class PTree<K extends Comparable<K>, V> implements Map<Iterable<K>, V> {
     }
 
     @Override
-    @NotNull
     public Collection<V> values() {
         return entrySet().stream().map(Map.Entry::getValue)
                 .collect(Collectors.toList());
     }
 
     @Override
-    @NotNull
     public Set<Map.Entry<Iterable<K>, V>> entrySet() {
         final Set<Map.Entry<Iterable<K>, V>> entries = new HashSet<>();
 

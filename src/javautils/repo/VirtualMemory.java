@@ -1,10 +1,6 @@
 package javautils.repo;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
 import java.io.RandomAccessFile;
-import java.util.Iterator;
 
 public class VirtualMemory implements Memory {
 
