@@ -1,5 +1,6 @@
 package javautils.sprites;
 
+import javautils.Logger;
 import javautils.time.SystemTimeSource;
 import javautils.time.Ticker;
 import javautils.time.TimeSource;
@@ -15,7 +16,11 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
     private double panX = 0;
     private double panY = 0;
     private double scale = 1.0;
-    
+    private double rotation = 0.0;
+    private double rotationPivotX = 0.0;
+    private double rotationPivotY = 0.0;
+    private double rotationSpeedFactor = 0.1D;
+
     private int lastMouseX = 0;
     private int lastMouseY = 0;
     private boolean isPanning = false;
@@ -24,6 +29,13 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
 
     private Ticker ticker;
     private boolean changed = false;
+
+    private WheelMode wheelMode = WheelMode.WHEEL_ROTATE;
+
+    public enum WheelMode {
+        WHEEL_ZOOM,
+        WHEEL_ROTATE
+    }
 
     public ViewController() {
         this(new SystemTimeSource(false));
@@ -82,6 +94,10 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
             lastMouseX = mouseEvent.getX();
             lastMouseY = mouseEvent.getY();
         }
+        if (mouseEvent.getButton() == MouseEvent.BUTTON3) {
+            this.wheelMode = WheelMode.WHEEL_ROTATE;
+            Logger.info("Setting wheelMode = " + this.wheelMode);
+        }
     }
 
     @Override
@@ -89,6 +105,11 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
         if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
             isPanning = false;
         }
+        if (mouseEvent.getButton() == MouseEvent.BUTTON3) {
+            this.wheelMode = WheelMode.WHEEL_ZOOM;
+            Logger.info("Setting wheelMode = " + this.wheelMode);
+        }
+
     }
 
     @Override
@@ -104,11 +125,17 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
         if (isPanning) {
-            int deltaX = mouseEvent.getX() - lastMouseX;
-            int deltaY = mouseEvent.getY() - lastMouseY;
+            double deltaX = (mouseEvent.getX() - lastMouseX);
+            double deltaY = (mouseEvent.getY() - lastMouseY);
             
-            panX += deltaX;
-            panY += deltaY;
+            double cos = Math.cos(rotation);
+            double sin = Math.sin(rotation);
+
+            double worldDeltaX = deltaX * cos + deltaY * sin;
+            double worldDeltaY = -deltaX * sin + deltaY * cos;
+
+            panX += worldDeltaX;
+            panY += worldDeltaY;
             
             lastMouseX = mouseEvent.getX();
             lastMouseY = mouseEvent.getY();
@@ -124,22 +151,39 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
+
+        switch(wheelMode) {
+            case WHEEL_ZOOM -> zoomCamera(mouseWheelEvent);
+            case WHEEL_ROTATE -> rotateCamera(mouseWheelEvent);
+        }
+        
+        invalidate();
+    }
+
+    private void rotateCamera(MouseWheelEvent mouseWheelEvent) {
+
+        rotationPivotX = mouseWheelEvent.getX();
+        rotationPivotY = mouseWheelEvent.getY();
+
+        rotation += mouseWheelEvent.getWheelRotation() * getRotationSpeedFactor();
+
+    }
+
+    private void zoomCamera(MouseWheelEvent mouseWheelEvent) {
         double oldScale = scale;
         double zoomFactor = 1.1;
-        
+
         if (mouseWheelEvent.getWheelRotation() < 0) {
             scale *= zoomFactor;
         } else {
             scale /= zoomFactor;
         }
-        
+
         int mouseX = mouseWheelEvent.getX();
         int mouseY = mouseWheelEvent.getY();
-        
+
         panX = mouseX - (mouseX - panX) * (scale / oldScale);
         panY = mouseY - (mouseY - panY) * (scale / oldScale);
-        
-        invalidate();
     }
     
     @Override
@@ -171,7 +215,38 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
         return scale;
     }
 
+    public double getRotation() {
+        return rotation;
+    }
+
+    public double getLastMouseX() {
+        return lastMouseX;
+    }
+
+    public double getLastMouseY() {
+        return lastMouseY;
+    }
+
+    public double getCenterX() {
+        return (attachedTo==null) ? 0D : attachedTo.getWidth()/2D;
+    }
+
+    public double getCenterY() {
+        return (attachedTo==null) ? 0D : attachedTo.getHeight()/2D;
+    }
+
+    public double getRotationSpeedFactor() {
+        return rotationSpeedFactor;
+    }
+
+    public void setRotationSpeedFactor(double rotationSpeedFactor) {
+        this.rotationSpeedFactor = rotationSpeedFactor;
+    }
+
     public final void applyTransform(final Graphics2D g2d) {
+        g2d.translate(rotationPivotX, rotationPivotY);
+        g2d.rotate(getRotation());
+        g2d.translate(-rotationPivotX, -rotationPivotY);
         g2d.translate(getPanX(), getPanY());
         g2d.scale(getScale(), getScale());
     }
@@ -198,8 +273,6 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
     public void stateChanged(ChangeEvent changeEvent) {
         invalidate();
     }
-
-
 
     public final Ticker getTicker() {
         if (this.ticker == null) {
