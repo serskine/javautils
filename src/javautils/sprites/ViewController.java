@@ -11,12 +11,12 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ViewController implements MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, ChangeListener {
+public class ViewController implements MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, ChangeListener, Camera2DController {
 
     private double panX = 0;
     private double panY = 0;
     private double scale = 1.0;
-    private double rotation = 0.0;
+    private double rotationRadians = 0.0;
     private double rotationPivotX = 0.0;
     private double rotationPivotY = 0.0;
     private double rotationSpeedFactor = 0.1D;
@@ -31,6 +31,46 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
     private boolean changed = false;
 
     private WheelMode wheelMode = WheelMode.WHEEL_ROTATE;
+
+    @Override
+    public double getX() {
+        return getPanX();
+    }
+
+    @Override
+    public double getY() {
+        return getPanY();
+    }
+
+    @Override
+    public void setX(double x) {
+        panX = x;
+    }
+
+    @Override
+    public void setY(double y) {
+        panY = y;
+    }
+
+    @Override
+    public double getRotationRadians() {
+        return rotationRadians;
+    }
+
+    @Override
+    public void setRotationRadians(double rotationRadians) {
+        this.rotationRadians = rotationRadians;
+    }
+
+    @Override
+    public double getZoom() {
+        return this.scale;
+    }
+
+    @Override
+    public void setZoom(double scale) {
+        this.scale = scale;
+    }
 
     public enum WheelMode {
         WHEEL_ZOOM,
@@ -128,14 +168,17 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
             double deltaX = (mouseEvent.getX() - lastMouseX);
             double deltaY = (mouseEvent.getY() - lastMouseY);
             
-            double cos = Math.cos(rotation);
-            double sin = Math.sin(rotation);
+            double cos = Math.cos(rotationRadians);
+            double sin = Math.sin(rotationRadians);
 
             double worldDeltaX = deltaX * cos + deltaY * sin;
             double worldDeltaY = -deltaX * sin + deltaY * cos;
 
-            panX += worldDeltaX;
-            panY += worldDeltaY;
+            setX(getX() + worldDeltaX);
+            setY(getY() + worldDeltaY);
+
+//            panX += worldDeltaX;
+//            panY += worldDeltaY;
             
             lastMouseX = mouseEvent.getX();
             lastMouseY = mouseEvent.getY();
@@ -165,7 +208,7 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
         rotationPivotX = mouseWheelEvent.getX();
         rotationPivotY = mouseWheelEvent.getY();
 
-        rotation += mouseWheelEvent.getWheelRotation() * getRotationSpeedFactor();
+        rotationRadians += mouseWheelEvent.getWheelRotation() * getRotationSpeedFactor();
 
     }
 
@@ -215,8 +258,9 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
         return scale;
     }
 
-    public double getRotation() {
-        return rotation;
+    @Override
+    public void setScale(double scale) {
+
     }
 
     public double getLastMouseX() {
@@ -245,9 +289,9 @@ public class ViewController implements MouseListener, MouseMotionListener, Mouse
 
     public final void applyTransform(final Graphics2D g2d) {
         g2d.translate(rotationPivotX, rotationPivotY);
-        g2d.rotate(getRotation());
+        g2d.rotate(getRotationRadians());
         g2d.translate(-rotationPivotX, -rotationPivotY);
-        g2d.translate(getPanX(), getPanY());
+        g2d.translate(getX(), getY());
         g2d.scale(getScale(), getScale());
     }
 
