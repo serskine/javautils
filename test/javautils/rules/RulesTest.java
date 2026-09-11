@@ -74,7 +74,6 @@ public class RulesTest {
         for(int i=0; i<numTrials; i++) {
 
             final RuleSet.Result r = ruleSet.result;
-//            Logger.info(String.format("r[%d]: %s", i, r));
 
             final Trigger testAllTriggers = when(r.getProb())
                     .then(this::incrementA)
