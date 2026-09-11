@@ -31,8 +31,8 @@ public class RulesTest {
               "*** TEST RESULTS\n" +
               "***\n" +
               "numTrials      = %d\n" +
-              "numAllTriggers = %d\n" +
-              "numOnTriggers  = %d\n",
+              "numA           = %d\n" +
+              "numB           = %d\n",
             numTrials,
                 numA,
                 numB)
@@ -74,7 +74,7 @@ public class RulesTest {
         for(int i=0; i<numTrials; i++) {
 
             final RuleSet.Result r = ruleSet.result;
-            Logger.info(String.format("r[%d]: %s", i, r));
+//            Logger.info(String.format("r[%d]: %s", i, r));
 
             final Trigger testAllTriggers = when(r.getProb())
                     .then(this::incrementA)
@@ -83,11 +83,13 @@ public class RulesTest {
             final Trigger onTrigger = when(testAllTriggers)
                     .then(this::incrementB)
                     .otherwise(this::incrementB);
+
+            onTrigger.get();
         }
 
 
         assertEquals(numTrials, numA);
-        assertEquals(numTrials * numRules, numB);
+        assertEquals(numTrials * 2, numB);
 
     }
 }
