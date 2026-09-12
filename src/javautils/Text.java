@@ -116,7 +116,10 @@ public class Text {
         }
 
         // Anchor pattern to entire input
-        final java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("^" + regex.toString() + "$");
+        final java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+                "^" + regex.toString() + "$",
+                java.util.regex.Pattern.DOTALL
+        );
         final java.util.regex.Matcher matcher = pattern.matcher(input);
         if (!matcher.matches()) {
             return java.util.Collections.emptyMap();
