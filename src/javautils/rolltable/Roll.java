@@ -37,20 +37,4 @@ public class Roll implements Parsable {
     public Die getMin() {
         return dice.stream().min((a, b) -> Integer.compare(a.getValue(), b.getValue())).orElseThrow();
     }
-
-    @Override
-    public String getFormat() {
-        return "{rolls} + {modifier}";
-    }
-
-    @Override
-    public Map<String, String> getTokens() {
-        return Map.of();
-    }
-
-    @Override
-    public void setTokens(Map<String, String> tokens) {
-        this.modifier = Integer.parseInt(tokens.get("modifier"));
-
-    }
 }

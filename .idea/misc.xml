@@ -3,6 +3,20 @@
   <component name="EntryPointsManager">
     <pattern value="javautils.ptree.PTree" method="getSuggestions" />
     <pattern value="javautils.ptree.PTree" method="PTree" />
+    <pattern value="javautils.math.Matrix.Cell" />
+    <pattern value="javautils.math.Matrix.Cell" method="Cell" />
+    <pattern value="javautils.math.Matrix" method="colStream" />
+    <pattern value="javautils.math.Matrix" method="decrement" />
+    <pattern value="javautils.math.Matrix" method="determinant" />
+    <pattern value="javautils.math.Matrix" method="forEachColDo" />
+    <pattern value="javautils.math.Matrix" method="forEachRowDo" />
+    <pattern value="javautils.math.Matrix" method="increment" />
+    <pattern value="javautils.math.Matrix" method="makeIdentity" />
+    <pattern value="javautils.math.Matrix" method="makeUpperTriangular" />
+    <pattern value="javautils.math.Matrix" />
+    <pattern value="javautils.math.Matrix" method="multiply" />
+    <pattern value="javautils.math.Matrix" method="rowStream" />
+    <pattern value="javautils.math.Matrix" method="scale" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_25" default="true" project-jdk-name="25" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

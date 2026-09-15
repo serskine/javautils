@@ -34,25 +34,4 @@ public class Range implements Parsable {
         return (value >= getStart()) && (value < getEnd());
     }
 
-
-    @Override
-    public String getFormat() {
-        return "[{start} -> {end}]";
-    }
-
-    @Override
-    public Map<String, String> getTokens() {
-        final Map<String,String> map = new HashMap<>();
-        map.put("start", "" + getStart());
-        map.put("end", "" + getEnd());
-        return map;
-    }
-
-    @Override
-    public void setTokens(Map<String, String> tokens) {
-        final String start = tokens.get("start");
-        final String end = tokens.get("end");
-        this.start = Integer.parseInt(start);
-        this.size = Integer.parseInt(end) - this.start;
-    }
 }

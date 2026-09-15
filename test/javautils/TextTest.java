@@ -66,7 +66,7 @@ public class TextTest {
                 "\n", tokenCells);
 
         final Matrix observed = new MatrixImpl(10, 10);
-        observed.parseFromText(input);
+        observed.getParser().parseFromText(input);
 
 
     }

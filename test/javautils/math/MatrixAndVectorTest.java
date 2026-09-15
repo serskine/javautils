@@ -17,16 +17,16 @@ public class MatrixAndVectorTest {
     public void describeVector() {
         final Vector expected = new VectorImpl(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-        final String expectedDescription = expected.describe();
+        final String expectedDescription = expected.getParser().describe(expected);
 
         Logger.info("expectedDescription = " + expectedDescription);
 
         final Vector observed = new VectorImpl();
-        observed.parseFromText(expectedDescription);
+        observed.getParser().parseFromText(expectedDescription);
 
         assertEquals(expected, observed);
 
-        final String observedDescription = observed.describe();
+        final String observedDescription = observed.getParser().describe(observed);
 
         Logger.info("observedDescription = " + observedDescription);
 
@@ -43,7 +43,7 @@ public class MatrixAndVectorTest {
             }
         }
 
-        final String format = expected.getFormat();
+        final String format = expected.getParser().getFormat();
         Logger.info("--- format ---\n" + format);
 
         final String expectedDescription = expected.describe();
@@ -52,7 +52,7 @@ public class MatrixAndVectorTest {
 
         final Matrix observed = new MatrixImpl(10, 10);
 
-        observed.parseFromText(expectedDescription);
+        observed.getParser().parseFromText(expectedDescription);
 
         assertEquals(expected, observed);
 

@@ -1,17 +1,14 @@
 package javautils.math;
 
-import javautils.parser.Parsable;
-import javautils.parser.ParsableArray;
+import javautils.parser.ArrayParser;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-public class VectorImpl extends ParsableArray implements Vector {
+public class VectorImpl implements Vector {
 
     public static Vector createOfDimension(int numDimensions) {
         return new VectorImpl(new Double[numDimensions]);
     }
+
+    private Double[] elements;
 
     public VectorImpl(int numDimensions) {
         this(new Double[numDimensions]);
@@ -28,6 +25,14 @@ public class VectorImpl extends ParsableArray implements Vector {
     public VectorImpl(Double[] values) {
         assert values != null;
         this.setElements(values);
+    }
+
+    public final void setElements(Double... elements) {
+        this.elements = elements;
+    }
+
+    public final Double[] getElements() {
+        return this.elements;
     }
 
     @Override
@@ -54,13 +59,4 @@ public class VectorImpl extends ParsableArray implements Vector {
         }
     }
 
-    @Override
-    public String getElementAsString(Object e) {
-        return Double.toString((Double) e);
-    }
-
-    @Override
-    public Double parseElementFromString(String tokenValue) {
-        return Double.parseDouble(tokenValue);
-    }
 }

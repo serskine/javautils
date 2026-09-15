@@ -7,7 +7,7 @@ import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public interface Vector extends Parsable {
+public interface Vector extends Parsable<Vector> {
     int numDimensions();
     double get(int dimension);
     void set(int dimension, double value);

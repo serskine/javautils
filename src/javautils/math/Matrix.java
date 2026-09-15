@@ -1,14 +1,13 @@
 package javautils.math;
 
 import javautils.parser.Parsable;
-import javautils.parser.ParsableArray;
+import javautils.parser.Parser;
 
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public interface Matrix extends Parsable {
+public interface Matrix extends Parsable<Matrix> {
     double get(int row, int col);
     void set(int row, int col, double value);
 
@@ -23,16 +22,12 @@ public interface Matrix extends Parsable {
     int numRows();
     int numCols();
 
-    class Cell {
-        public final int row, col;
+    void init(final int numRows, final int numCols);
 
-        public Cell(int row, int col) {
-            this.row = row;
-            this.col = col;
-        }
+    record Cell(int row, int col) {
     }
 
-    class InternalVector extends ParsableArray implements Vector {
+    class InternalVector implements Parsable<Vector>, Vector {
         private final Matrix m;
         private final int dimension;
         private final boolean isRow;
@@ -62,17 +57,6 @@ public interface Matrix extends Parsable {
             }
         }
 
-        @Override
-        public String getElementAsString(Object e) {
-            final VectorImpl v = (VectorImpl) m;
-            return v.getElementAsString(e);
-        }
-
-        @Override
-        public Object parseElementFromString(String tokenValue) {
-            final VectorImpl v = (VectorImpl) m;
-            return v.parseElementFromString(tokenValue);
-        }
     }
 
     static void verifySameDimensions(Matrix m1, Matrix m2) {
@@ -267,6 +251,11 @@ public interface Matrix extends Parsable {
         }
         sb.append("\n");
         return sb.toString();
+    }
+
+    @Override
+    default Parser<Matrix> getParser() {
+        return new MatrixParser();
     }
 
 }
