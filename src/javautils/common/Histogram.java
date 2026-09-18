@@ -1,5 +1,7 @@
 package javautils.common;
 
+import java.util.Arrays;
+
 public class Histogram<K> extends DefaultMap<K, Double> {
     public Histogram() {
         super(0D);
@@ -17,5 +19,17 @@ public class Histogram<K> extends DefaultMap<K, Double> {
         for(K key : keySet()) {
             put(key, Math.max(0D, get(key)));
         }
+    }
+
+    public static <T> Histogram<T> build(T... items) {
+        return build(Arrays.asList(items));
+    }
+
+    public static <T> Histogram<T> build(Iterable<T> items) {
+        final Histogram<T> histogram = new Histogram<>();
+        for(T item : items) {
+            histogram.increment(item, 1);
+        }
+        return histogram;
     }
 }
