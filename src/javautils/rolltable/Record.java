@@ -6,7 +6,7 @@ import javautils.parser.Parsable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Record implements Parsable {
+public class Record {
     private Range range;
     private String result;
     private int qty;

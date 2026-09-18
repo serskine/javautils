@@ -52,7 +52,7 @@ public class MatrixAndVectorTest {
 
         final Matrix observed = new MatrixImpl(10, 10);
 
-        observed.getParser().parseFromText(expectedDescription);
+        observed.getParser().parseFromText(observed, expectedDescription);
 
         assertEquals(expected, observed);
 

@@ -1,9 +1,8 @@
 package javautils.rules;
 
-import javautils.fuzzy.Fuzzy;
+import javautils.fuzzy.Probability;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class RuleSet {
@@ -14,7 +13,7 @@ public class RuleSet {
         final Set<Supplier<Boolean>> passed = new HashSet<>();
         final Set<Supplier<Boolean>> failed = new HashSet<>();
         final Set<Supplier<Boolean>> skipped = new HashSet<>();
-        final Fuzzy fuzzy = new Fuzzy(0D);
+        final Probability probability = new Probability(0D);
 
         public void clear() {
             passed.clear();
@@ -40,14 +39,14 @@ public class RuleSet {
 
         private void updateFuzzy() {
             if (numTested() > 0) {
-                fuzzy.setProbability(numPassed() / numTested());
+                probability.setValue(numPassed() / numTested());
             } else {
-                fuzzy.setProbability(0D);
+                probability.setValue(0D);
             }
         }
 
-        public Fuzzy getProb() {
-            return this.fuzzy;
+        public Probability getProb() {
+            return this.probability;
         }
 
         @Override

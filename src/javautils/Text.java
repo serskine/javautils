@@ -1,10 +1,62 @@
 package javautils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
 public class Text {
+
+    public static final String OPEN_PARAM = "{";
+    public static final String CLOSE_PARAM = "}";
+
+    public static Dimension maxCellSize(Iterable<String> strings) {
+        Dimension d = null;
+        for(String s : strings) {
+            final Dimension size = cellSize(s);
+            if (d != null) {
+                d.width = Math.max(d.width, size.width);
+                d.height = Math.max(d.height, size.height);
+            } else {
+                d = size;
+            }
+        }
+        return d;
+    }
+
+    public static Dimension maxCellSize(String... strings) {
+        return maxCellSize(Arrays.asList(strings));
+    }
+
+    public static Dimension minCellSize(Iterable<String> strings) {
+        Dimension d = null;
+        for(String s : strings) {
+            final Dimension size = cellSize(s);
+            if (d != null) {
+                d.width = Math.min(d.width, size.width);
+                d.height = Math.min(d.height, size.height);
+            } else {
+                d = size;
+            }
+        }
+        return d;
+    }
+
+    public static Dimension minCellSize(String... strings) {
+        return minCellSize(Arrays.asList(strings));
+    }
+
+
+    public static Dimension cellSize(String text) {
+        final String[] lines = text.split("\n");
+        int numRows = lines.length;
+        int numCols = 0;
+        for(String line : lines) {
+            numCols = Math.max(line.length(), numCols);
+        }
+        return new Dimension(numCols, numRows);
+    }
+
     public static String fstring(final int size, final String text) {
         if (text.length() > size) {
             return text.substring(0, size);
@@ -68,6 +120,10 @@ public class Text {
     }
 
     public static java.util.Map<String, String> extractTokens(final String format, final String input) {
+        return extractTokens(format, input, OPEN_PARAM, CLOSE_PARAM);
+    }
+
+    public static java.util.Map<String, String> extractTokens(final String format, final String input, final String openParam, final String closeParam) {
         if (format == null || input == null) {
             return java.util.Collections.emptyMap();
         }
@@ -79,7 +135,7 @@ public class Text {
         final int len = format.length();
 
         while (idx < len) {
-            int open = format.indexOf('{', idx);
+            int open = format.indexOf(openParam, idx);
             if (open == -1) {
                 // remaining literal
                 String literal = format.substring(idx);
@@ -89,16 +145,16 @@ public class Text {
                 idx = len;
                 break;
             }
-            // append literal before '{'
+            // append literal before {@link openParam}
             if (open > idx) {
                 String literal = format.substring(idx, open);
                 regex.append(java.util.regex.Pattern.quote(literal));
             }
-            int close = format.indexOf('}', open + 1);
+            int close = format.indexOf(closeParam, open + openParam.length());
             if (close == -1) {
                 throw new IllegalArgumentException("Unclosed token in format: " + format);
             }
-            String name = format.substring(open + 1, close);
+            String name = format.substring(open + openParam.length(), close);
             if (name.isEmpty()) {
                 throw new IllegalArgumentException("Empty token name in format: " + format);
             }

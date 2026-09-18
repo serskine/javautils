@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Roll implements Parsable {
+public class Roll {
     private final List<Die> dice = new ArrayList<>();
     private int modifier;
     private int value;

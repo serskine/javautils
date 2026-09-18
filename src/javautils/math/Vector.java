@@ -1,6 +1,7 @@
 package javautils.math;
 
 import javautils.parser.Parsable;
+import javautils.parser.Parser;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -15,6 +16,20 @@ public interface Vector extends Parsable<Vector> {
     static void verifySameDimensions(Vector v1, Vector v2) {
         assert (v1.numDimensions() == v2.numDimensions());
     }
+
+    default Parser<Vector> getParser() {
+        return new VectorParser();
+    }
+
+    default void init(double... values) {
+        final Double[] newValues = new Double[values.length];
+        for(int i=0; i<newValues.length; i++) {
+            newValues[i] = values[i];
+        }
+        init(newValues);
+    }
+
+    void init(Double... values);
 
     default void forEachDimensionDo(BiConsumer<Vector, Integer> func) {
         for(int i=0; i<numDimensions(); i++) {

@@ -1,13 +1,18 @@
 package javautils.parser;
 
+import javautils.Logger;
 import javautils.Text;
 
 import java.util.Map;
 
 public interface Parser<T> {
 
-    String getFormat();
+    default String openTokenParam() { return "{";   }
+    default String closeTokenParam() { return "}";  }
+    default String paramToken(final String name) { return openTokenParam() + name + closeTokenParam();}
 
+
+    String getFormat();
     Map<String, String> getTokens(T item);
 
     default String describe(T item) {
@@ -26,7 +31,7 @@ public interface Parser<T> {
 
     default T parseFromText(final T item, final String input) {
         final String format = getFormat();
-        final Map<String, String> tokens = Text.extractTokens(format, input);
+        final Map<String, String> tokens = Text.extractTokens(format, input, openTokenParam(), closeTokenParam());
         try {
             setTokens(item, tokens);
         } catch (Exception e) {
@@ -62,4 +67,78 @@ public interface Parser<T> {
             );
             throw new RuntimeException(message, cause);
     }
+
+    default Double parseDoubleOrDefault(final String string, final Double dValue) {
+        try {
+            return Double.parseDouble(string);
+        } catch (NumberFormatException e) {
+            Logger.warn(e.getMessage(), e);
+            return dValue;
+        }
+    }
+
+    default Float parseFloatOrDefault(final String string, final Float dValue) {
+        try {
+            return Float.parseFloat(string);
+        } catch (NumberFormatException e) {
+            Logger.warn(e.getMessage(), e);
+            return dValue;
+        }
+    }
+
+    default Boolean parseBooleanOrDefault(final String string, Boolean dValue) {
+        try {
+            return Boolean.parseBoolean(string);
+        } catch (NumberFormatException e) {
+            Logger.warn(e.getMessage(), e);
+            return dValue;
+        }
+    }
+
+    default Byte parseByteOrDefault(final String string, Byte dValue) {
+        try {
+            return Byte.parseByte(string);
+        } catch (Exception e) {
+            Logger.warn(e.getMessage(), e);
+            return dValue;
+        }
+    }
+
+    default Short parseShortOrDefault(final String string, Short dValue) {
+        try {
+            return Short.parseShort(string);
+        } catch (Exception e) {
+            Logger.warn(e.getMessage(), e);
+            return dValue;
+        }
+    }
+
+    default Integer parseIntegerOrDefault(final String string, Integer dValue) {
+        try {
+            return Integer.parseInt(string);
+        } catch (Exception e) {
+            Logger.warn(e.getMessage(), e);
+            return dValue;
+        }
+    }
+
+    default Long parseLongOrDefault(final String string, Long dValue) {
+        try {
+            return Long.parseLong(string);
+        } catch (Exception e) {
+            Logger.warn(e.getMessage(), e);
+            return dValue;
+        }
+    }
+
+    default Character parseCharacterOrDefault(final String string, final Character dValue) {
+        try {
+            return string.charAt(0);
+        } catch (Exception e) {
+            Logger.warn(e.getMessage(), e);
+            return dValue;
+        }
+    }
+
+
 }

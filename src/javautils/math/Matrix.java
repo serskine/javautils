@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public interface Matrix extends Parsable<Matrix> {
+
     double get(int row, int col);
     void set(int row, int col, double value);
 
@@ -57,6 +58,18 @@ public interface Matrix extends Parsable<Matrix> {
             }
         }
 
+        @Override
+        public void init(Double... values) {
+            assert values.length == numDimensions();
+            for(int i=0; i<numDimensions(); i++) {
+                set(i, values[i]);
+            }
+        }
+
+        @Override
+        public Parser<Vector> getParser() {
+            return new VectorParser();
+        }
     }
 
     static void verifySameDimensions(Matrix m1, Matrix m2) {
@@ -68,9 +81,24 @@ public interface Matrix extends Parsable<Matrix> {
         return new InternalVector(this, row, true);
     }
 
+    default void setRow(int row, Vector v) {
+        assert v.numDimensions() == numCols();
+        for(int col=0; col<numCols(); col++) {
+            set(row, col, v.get(col));
+        }
+    }
+
     default Vector getColumn(int col) {
         return new InternalVector(this, col, false);
     }
+
+    default void setColumn(int col, Vector v) {
+        assert v.numDimensions() == numRows();
+        for(int row=0; row<numRows(); row++) {
+            set(row, col, v.get(row));
+        }
+    }
+
 
     default void forEachCellDo(final BiConsumer<Matrix, Cell> consumer) {
         for (int row=0; row<numRows(); row++) {

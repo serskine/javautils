@@ -5,7 +5,7 @@ import javautils.parser.Parsable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Range implements Parsable {
+public class Range {
     private int start, size;
 
     public Range(int start, int size) {

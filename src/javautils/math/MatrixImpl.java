@@ -71,4 +71,7 @@ public class MatrixImpl implements Matrix {
     public Vector getRow(int row) {
         return (Vector) getElements()[row];
     }
+
+
+
 }

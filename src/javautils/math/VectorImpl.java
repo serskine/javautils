@@ -15,19 +15,16 @@ public class VectorImpl implements Vector {
     }
 
     public VectorImpl(double... values) {
-        Double[] newValues = new Double[values.length];
-        for(int i=0; i<values.length; i++) {
-            newValues[i] = values[i];
-        }
-        this(newValues);
+        this(new Double[0]);
+        init(values);   // Old array will be replaced.
     }
 
     public VectorImpl(Double[] values) {
         assert values != null;
-        this.setElements(values);
+        this.init(values);
     }
 
-    public final void setElements(Double... elements) {
+    public final void init(Double... elements) {
         this.elements = elements;
     }
 
