@@ -32,7 +32,6 @@ public class MatrixImpl extends ParsableArray implements Matrix {
             rows[i] = new VectorImpl(numCols);
         }
         setElements(rows);
-        Logger.info("MatrixImpl init -> " + rows.length + " x " + numCols);
     }
 
     @Override
@@ -145,7 +144,7 @@ public class MatrixImpl extends ParsableArray implements Matrix {
 
     @Override
     public Object parseElementFromString(String tokenValue) {
-        final Vector v = new VectorImpl();
+        final Vector v = VectorImpl.create();
         v.parseFromText(tokenValue);
         return v;
     }

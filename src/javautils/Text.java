@@ -1,10 +1,113 @@
 package javautils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Text {
+
+    public static String asTable(final String[][] t) {
+        if (t == null || t.length == 0) {
+            return "";
+        }
+
+        int numRows = t.length;
+        int numCols = 0;
+        for (String[] row : t) {
+            if (row != null) {
+                numCols = Math.max(numCols, row.length);
+            }
+        }
+
+        final Map<Integer, Integer> colWidth = new HashMap<>();
+        final Map<Integer, Integer> rowHeight = new HashMap<>();
+
+        for (int row = 0; row < numRows; row++) {
+            final String[] r = (t[row] == null) ? new String[0] : t[row];
+            for (int col = 0; col < numCols; col++) {
+                final String token = (col < r.length) ? r[col] : null;
+                final Dimension d = getTextSize(token);
+                rowHeight.put(row, Math.max(rowHeight.getOrDefault(row, 0), d.height));
+                colWidth.put(col, Math.max(colWidth.getOrDefault(col, 0), d.width));
+            }
+        }
+
+        final List<String> renderedRows = new ArrayList<>();
+        for (int row = 0; row < numRows; row++) {
+            final String[] r = (t[row] == null) ? new String[0] : t[row];
+            final List<String> rowLines = new ArrayList<>();
+
+            final int maxCellHeight = rowHeight.getOrDefault(row, 0);
+            for (int lineNum = 0; lineNum < maxCellHeight; lineNum++) {
+                rowLines.add("");
+            }
+
+            for (int col = 0; col < numCols; col++) {
+                final String token = (col < r.length) ? r[col] : null;
+                final Dimension cellSize = new Dimension(
+                        colWidth.getOrDefault(col, 0),
+                        rowHeight.getOrDefault(row, 0)
+                );
+                final String[] cellLines = cellString(cellSize, token).split("\n", -1);
+
+                for (int lineNum = 0; lineNum < maxCellHeight; lineNum++) {
+                    final String prefix = rowLines.get(lineNum);
+                    final String cellLine = (lineNum < cellLines.length) ? cellLines[lineNum] : "";
+                    rowLines.set(lineNum, prefix + (prefix.isEmpty() ? "" : " ") + cellLine);
+                }
+            }
+
+            String rowText = String.join("\n", rowLines);
+            rowText = rowText.replaceFirst("\\s+$", "");
+            renderedRows.add(rowText);
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        for (String rowText : renderedRows) {
+            sb.append(rowText).append('\n');
+        }
+        return sb.toString();
+    }
+
+    public static Dimension getTextSize(String text) {
+        if (text == null) {
+            return new Dimension(0, 0);
+        }
+
+        final String[] lines = text.split("\n", -1);
+        int maxCols = 0;
+        for (String line : lines) {
+            maxCols = Math.max(maxCols, line.length());
+        }
+        return new Dimension(maxCols, lines.length);
+    }
+
+    public static String cellString(final Dimension size, final String text) {
+        if (size == null) {
+            return "";
+        }
+
+        final String value = (text == null) ? "" : text;
+        final String[] lines = value.split("\n", -1);
+
+        final StringBuilder sb = new StringBuilder();
+        for (int row = 0; row < size.height; row++) {
+            String line = (row < lines.length) ? lines[row] : "";
+            if (line.length() > size.width) {
+                line = line.substring(0, size.width);
+            }
+            line += pad(" ", size.width - line.length());
+            sb.append(line);
+            if (row + 1 < size.height) {
+                sb.append('\n');
+            }
+        }
+        return sb.toString();
+    }
+
     public static String fstring(final int size, final String text) {
         if (text.length() > size) {
             return text.substring(0, size);

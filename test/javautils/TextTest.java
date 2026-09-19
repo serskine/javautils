@@ -70,4 +70,17 @@ public class TextTest {
 
 
     }
+
+    @Test
+    public void asTable() {
+        final String[][] t = new String[][] {
+            {"aaaa\naaa\na", "bb", "c", "ddddddddddddd", "e\ne\ne\ne\n\ne"},
+            {"bbb", "bb", "c", "ddddddddddddd", "xxx"},
+            {"x", "x", "xx", "xx", "xxxxx", "wwww", "eee", "rrr", "tt"},
+            {"ddd", "dd", "dd", "ddddddddddddd", null}
+        };
+
+        final String observed = Text.asTable(t);
+        Logger.info(observed);
+    }
 }

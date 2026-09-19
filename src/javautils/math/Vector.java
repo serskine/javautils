@@ -61,7 +61,7 @@ public interface Vector extends Parsable {
     }
 
     default Vector copy() {
-        final Vector v = VectorImpl.createOfDimension(numDimensions());
+        final Vector v = new VectorImpl(numDimensions());
         v.forEachDimensionDo((v2,i) -> v2.set(i, get(i)));
         return v;
     }
@@ -117,7 +117,7 @@ public interface Vector extends Parsable {
         Matrix m = skewMatrix(a, b); // n x n skew matrix
 
         int count = n * (n - 1) / 2; // number of upper-triangular entries
-        Vector result = VectorImpl.createOfDimension(count);
+        Vector result = new VectorImpl(count);
 
         int k = 0;
         for (int i = 0; i < n; i++) {

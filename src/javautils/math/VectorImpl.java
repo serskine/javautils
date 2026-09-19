@@ -9,25 +9,17 @@ import java.util.Map;
 
 public class VectorImpl extends ParsableArray implements Vector {
 
-    public static Vector createOfDimension(int numDimensions) {
-        return new VectorImpl(new Double[numDimensions]);
-    }
-
     public VectorImpl(int numDimensions) {
-        this(new Double[numDimensions]);
+        super(new Double[numDimensions]);
+        setAll(0D);
     }
 
-    public VectorImpl(double... values) {
-        Double[] newValues = new Double[values.length];
-        for(int i=0; i<values.length; i++) {
-            newValues[i] = values[i];
+    public static Vector create(double... values) {
+        final Vector v = new VectorImpl(values.length);
+        for(int i = 0; i < values.length; i++) {
+            v.set(i, values[i]);
         }
-        this(newValues);
-    }
-
-    public VectorImpl(Double[] values) {
-        assert values != null;
-        this.setElements(values);
+        return v;
     }
 
     @Override
