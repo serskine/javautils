@@ -1,7 +1,7 @@
 package javautils.rules;
 
 import javautils.Logger;
-import javautils.fuzzy.Fuzzy;
+import javautils.fuzzy.Probability;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class RulesTest {
     @Test
     public void resultSet() {
         final RuleSet ruleSet = new RuleSet();
-        final Fuzzy chanceOfPass = new Fuzzy(1);
+        final Probability chanceOfPass = new Probability(1);
 
         for(int i=0; i<numTrials; i++) {
             ruleSet.tests.add(chanceOfPass);
@@ -67,8 +67,8 @@ public class RulesTest {
 
         final RuleSet ruleSet = new RuleSet();
         for(int i=0; i<numRules; i++) {
-            final Fuzzy fuzzy = new Fuzzy((i+1D) / numRules);
-            ruleSet.tests.add(fuzzy);
+            final Probability probability = new Probability((i+1D) / numRules);
+            ruleSet.tests.add(probability);
         }
 
         for(int i=0; i<numTrials; i++) {

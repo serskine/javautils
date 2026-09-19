@@ -1,14 +1,14 @@
 package javautils.math;
 
 import javautils.parser.Parsable;
-import javautils.parser.ParsableArray;
+import javautils.parser.Parser;
 
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public interface Matrix extends Parsable {
+public interface Matrix extends Parsable<Matrix> {
+
     double get(int row, int col);
     void set(int row, int col, double value);
 
@@ -23,16 +23,12 @@ public interface Matrix extends Parsable {
     int numRows();
     int numCols();
 
-    class Cell {
-        public final int row, col;
+    void init(final int numRows, final int numCols);
 
-        public Cell(int row, int col) {
-            this.row = row;
-            this.col = col;
-        }
+    record Cell(int row, int col) {
     }
 
-    class InternalVector extends ParsableArray implements Vector {
+    class InternalVector implements Parsable<Vector>, Vector {
         private final Matrix m;
         private final int dimension;
         private final boolean isRow;
@@ -63,15 +59,16 @@ public interface Matrix extends Parsable {
         }
 
         @Override
-        public String getElementAsString(Object e) {
-            final VectorImpl v = (VectorImpl) m;
-            return v.getElementAsString(e);
+        public void init(Double... values) {
+            assert values.length == numDimensions();
+            for(int i=0; i<numDimensions(); i++) {
+                set(i, values[i]);
+            }
         }
 
         @Override
-        public Object parseElementFromString(String tokenValue) {
-            final VectorImpl v = (VectorImpl) m;
-            return v.parseElementFromString(tokenValue);
+        public Parser<Vector> getParser() {
+            return new VectorParser();
         }
     }
 
@@ -84,9 +81,24 @@ public interface Matrix extends Parsable {
         return new InternalVector(this, row, true);
     }
 
+    default void setRow(int row, Vector v) {
+        assert v.numDimensions() == numCols();
+        for(int col=0; col<numCols(); col++) {
+            set(row, col, v.get(col));
+        }
+    }
+
     default Vector getColumn(int col) {
         return new InternalVector(this, col, false);
     }
+
+    default void setColumn(int col, Vector v) {
+        assert v.numDimensions() == numRows();
+        for(int row=0; row<numRows(); row++) {
+            set(row, col, v.get(row));
+        }
+    }
+
 
     default void forEachCellDo(final BiConsumer<Matrix, Cell> consumer) {
         for (int row=0; row<numRows(); row++) {
@@ -267,6 +279,11 @@ public interface Matrix extends Parsable {
         }
         sb.append("\n");
         return sb.toString();
+    }
+
+    @Override
+    default Parser<Matrix> getParser() {
+        return new MatrixParser();
     }
 
 }

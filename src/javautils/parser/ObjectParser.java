@@ -1,10 +1,8 @@
 package javautils.parser;
 
-import javautils.Text;
-
 import java.util.*;
 
-public class ParsableObj implements Parsable {
+public class ObjectParser implements Parser<Object> {
     private Object item;
     private Class<?> type;
 
@@ -25,19 +23,19 @@ public class ParsableObj implements Parsable {
         FORMAT_MAP.put(Boolean.class, FORMAT_DEFAULT);
     }
 
-    public ParsableObj(Class<?> type, Object item) {
+    public ObjectParser(Class<?> type, Object item) {
         this.type = type;
         this.item = item;
     }
 
-    public static <T> ParsableObj create(Class<?> type, T value) {
-        return new ParsableObj(type, value);
+    public static <T> ObjectParser create(Class<?> type, T value) {
+        return new ObjectParser(type, value);
     }
 
-    public static ParsableObj create(final Object item) {
+    public static ObjectParser create(final Object item) {
         return  (item==null)
-                ?   new ParsableObj(null, null)
-                :   new ParsableObj(item.getClass(), item);
+                ?   new ObjectParser(null, null)
+                :   new ObjectParser(item.getClass(), item);
     }
 
     @Override
@@ -46,7 +44,7 @@ public class ParsableObj implements Parsable {
     }
 
     @Override
-    public Map<String, String> getTokens() {
+    public Map<String, String> getTokens(Object item) {
         final Map<String, String> map = new HashMap<>();
         String type = (this.type==null) ? TYPE_NULL : this.type.getSimpleName();
         String value = VALUE_NULL;
@@ -71,7 +69,7 @@ public class ParsableObj implements Parsable {
             } else if (Boolean.class.equals(cls)) {
                 value = Boolean.toString((Boolean) item);
             } else if (item instanceof Parsable) {
-                value = ((Parsable) item).describe();
+                value = describe(item);
             }
         }
 
@@ -82,7 +80,12 @@ public class ParsableObj implements Parsable {
     }
 
     @Override
-    public void setTokens(Map<String, String> tokens) {
+    public Object createNewItem() {
+        return null;    // This is fine for now. I might change this later.
+    }
+
+    @Override
+    public void setTokens(Object item, Map<String, String> tokens) {
         final String type = tokens.get("type");
         final String value = tokens.get("value");
 
@@ -117,7 +120,7 @@ public class ParsableObj implements Parsable {
             item = Boolean.parseBoolean(value);
         } else if ( this.type.getSimpleName().equalsIgnoreCase(type) && item instanceof Parsable) {
             final Parsable p = (Parsable) item;
-            p.parseFromText(value);
+            parseFromText(p, value);
         } else {
             throw new RuntimeException("Expected type " + this.type.getSimpleName() + " but was told " + type);
         }

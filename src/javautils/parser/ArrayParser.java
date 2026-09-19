@@ -3,10 +3,10 @@ package javautils.parser;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class ParsableArray implements Parsable {
+public abstract class ArrayParser implements Parser<Object[]> {
     Object[] elements;
 
-    public ParsableArray(Object... elements) {
+    public ArrayParser(Object... elements) {
         this.elements = elements;
     }
 
@@ -20,16 +20,16 @@ public abstract class ParsableArray implements Parsable {
     }
 
     @Override
-    public Map<String, String> getTokens() {
+    public Map<String, String> getTokens(Object[] items) {
         final Map<String, String> map = new HashMap<>();
-        final int len = getElements().length;
+        final int len = items.length;
         map.put(TOKEN_NUM_ELEMENTS, String.valueOf(len));
         final StringBuilder sb = new StringBuilder();
         for(int i=0; i<len; i++) {
             if (i>0) {
                 sb.append(getElementDelim());
             }
-            sb.append(getElementAsString(getElements()[i]));
+            sb.append(getElementAsString(items[i]));
         }
         final String elementsToken = sb.toString();
         map.put(TOKEN_ELEMENTS, elementsToken);
@@ -37,7 +37,7 @@ public abstract class ParsableArray implements Parsable {
     }
 
     @Override
-    public void setTokens(Map<String, String> tokenMap) {
+    public void setTokens(Object[] items, Map<String, String> tokenMap) {
         final int numElements;
         final String numElementsToken = tokenMap.get(TOKEN_NUM_ELEMENTS);
         try {
@@ -46,7 +46,7 @@ public abstract class ParsableArray implements Parsable {
             throw new IllegalArgumentException("Failed to parse numElements from " + numElementsToken);
         }
 
-        final Object[] elements = new Object[numElements];
+        final Object[] elements = items;
         setElements(elements);
 
         final String elementsToken = tokenMap.get(TOKEN_ELEMENTS);
@@ -89,6 +89,6 @@ public abstract class ParsableArray implements Parsable {
 
     @Override
     public String toString() {
-        return describe();
+        return describe(getElements());
     }
 }
