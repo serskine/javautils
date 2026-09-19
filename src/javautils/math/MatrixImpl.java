@@ -1,18 +1,11 @@
 package javautils.math;
 
 import javautils.Logger;
-import javautils.parser.ArrayParser;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MatrixImpl implements Matrix {
 
-    private int numRows, numCols;
+    private int numRows;
+    private int numCols;
     private Vector[] rows;
 
     public MatrixImpl() {
