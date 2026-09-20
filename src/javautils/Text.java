@@ -212,13 +212,12 @@ public class Text {
         return join("{", ";", "}", statements);
     }
 
-    public static String substituteTokens(final Map<String, String> tokenMap, String output) {
+    public static String substituteTokens(final Map<String, String> tokenMap, String outputFormat) {
         for(Map.Entry<String, String> e : tokenMap.entrySet()) {
             final String target = "{" + e.getKey() + "}";
-            final String replacement = e.getValue();
-            output = output.replace(target, e.getValue());
+            outputFormat = outputFormat.replace(target, e.getValue());
         }
-        return output;
+        return outputFormat;
     }
 
     public static java.util.Map<String, String> extractTokens(final String format, final String input) {

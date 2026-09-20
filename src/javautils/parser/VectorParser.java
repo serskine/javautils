@@ -1,51 +1,31 @@
 package javautils.parser;
 
+
 import javautils.math.Vector;
 import javautils.math.VectorImpl;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
+import java.util.List;
 
 public class VectorParser implements Parser<Vector> {
-    public static final String OPEN_TAG = "[";
-    public static final String CLOSE_TAG = "]";
-    public static final String DELIM = ", ";
-    public static final String TOKEN_ELEMENTS = "elements";
+
+    private static final String TAG_OPEN = "[";
+    private static final String TAG_CLOSE = "]";
+    private static final String TAG_DELIM = ", ";
+    private static final Parser<Double> DOUBLE_PARSER = Parser.getDoubleParser(0D);
+    private static final ArrayParser<Double> DOUBLE_ARRAY_PARSER = new ArrayParserImpl<>(DOUBLE_PARSER, TAG_OPEN, TAG_CLOSE, TAG_DELIM);
 
     @Override
-    public String getFormat() {
-        return String.format("[%s]", paramToken(TOKEN_ELEMENTS));
+    public Vector parse(String input) {
+        final List<Double> values = DOUBLE_ARRAY_PARSER.parse(input);
+        final Vector vector = new VectorImpl().init(values);
+
+        return vector;
     }
 
     @Override
-    public Map<String, String> getTokens(Vector v) {
-        final Map<String, String> tokenMap = new HashMap<>();
-        final StringBuilder sb = new StringBuilder();
-        sb.append(OPEN_TAG);
-        for(int i=0; i<v.numDimensions(); i++) {
-            if (i>0) {
-                sb.append(DELIM);
-            }
-            sb.append(v.get(i));
-        }
-        sb.append(CLOSE_TAG);
-        tokenMap.put(TOKEN_ELEMENTS, sb.toString());
-        return tokenMap;
-    }
-
-    @Override
-    public Vector createNewItem() {
-        return new VectorImpl(0);
-    }
-
-    @Override
-    public void setTokens(Vector item, Map<String, String> tokens) {
-        final String elements = tokens.get(TOKEN_ELEMENTS);
-        final String[] elementTokens = elements.split(DELIM);
-        final Double[] values = new Double[elementTokens.length];
-        for(int i=0; i< elementTokens.length; i++) {
-            values[i] = parseDoubleOrDefault(elementTokens[i], 0D);
-        }
-        item.init(values);
+    public String describe(Vector vector) {
+        return DOUBLE_ARRAY_PARSER.describe(vector.stream().toList());
     }
 }
+

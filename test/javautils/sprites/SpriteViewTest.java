@@ -11,6 +11,9 @@ import org.junit.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.util.Random;
 
 public class SpriteViewTest {
@@ -30,7 +33,7 @@ public class SpriteViewTest {
 
     @Before
     public void onSetup() {
-        ticker = new Ticker(new SystemTimeSource(), Thread.MIN_PRIORITY);
+        ticker = new Ticker(new SystemTimeSource(), Thread.MAX_PRIORITY);
         ticker.addListener(new Ticker.Listener() {
             @Override
             public void onTick(long tick) {
@@ -53,13 +56,14 @@ public class SpriteViewTest {
 
         view = new SpriteView();
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
         frame.add(view);
         frame.setBackground(Color.YELLOW);
         frame.setVisible(true);
+
 
         view.addSprite(createOriginSprite());
         for(int i=0; i<NUM_SPRITES; i++) {
@@ -73,9 +77,9 @@ public class SpriteViewTest {
     }
 
     @After
-    public void onTearDown() {
+    public void onTearDown() throws InterruptedException {
         while(frame.isVisible()) {
-
+            Thread.sleep(1000);
         }
     }
 

@@ -2,7 +2,10 @@ package javautils.parser;
 
 import javautils.Logger;
 import javautils.Text;
+import javautils.math.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface Parser<T> {
@@ -11,134 +14,169 @@ public interface Parser<T> {
     default String closeTokenParam() { return "}";  }
     default String paramToken(final String name) { return openTokenParam() + name + closeTokenParam();}
 
+    T parse(final String input);
+    String describe(T element);
 
-    String getFormat();
-    Map<String, String> getTokens(T item);
+    static Parser<Integer> getIntegerParser(final Integer dValue) {
+        return new Parser<Integer>() {
 
-    default String describe(T item) {
-        final Map<String, String> tokensMap = getTokens(item);
-        final String format = getFormat();
-        return Text.substituteTokens(tokensMap, format);
+            @Override
+            public Integer parse(String string) {
+                try {
+                    return Integer.parseInt(string);
+                } catch (NumberFormatException e) {
+                    Logger.warn(e.getMessage(), e);
+                    return dValue;
+                }
+            }
+
+            @Override
+            public String describe(Integer element) {
+                return Integer.toString(element);
+            }
+        };
     }
 
-    T createNewItem();
+    static Parser<Float> getFloatParser(final Float dValue) {
+        return new Parser<Float>() {
 
-    default T parseFromText(final String input) {
-        final T item = createNewItem();
-        parseFromText(item, input);
-        return item;
+            @Override
+            public Float parse(String string) {
+                try {
+                    return Float.parseFloat(string);
+                } catch (NumberFormatException e) {
+                    Logger.warn(e.getMessage(), e);
+                    return dValue;
+                }
+            }
+
+            @Override
+            public String describe(Float element) {
+                return Float.toString(element);
+            }
+        };
     }
 
-    default T parseFromText(final T item, final String input) {
-        final String format = getFormat();
-        final Map<String, String> tokens = Text.extractTokens(format, input, openTokenParam(), closeTokenParam());
-        try {
-            setTokens(item, tokens);
-        } catch (Exception e) {
-            throwParsingError(format, tokens, input, e);
-        }
-        return item;
+    static Parser<Double> getDoubleParser(final Double dValue) {
+        return new Parser<Double>() {
+
+            @Override
+            public Double parse(String string) {
+                try {
+                    return Double.parseDouble(string);
+                } catch (NumberFormatException e) {
+                    Logger.warn(e.getMessage(), e);
+                    return dValue;
+                }
+            }
+
+            @Override
+            public String describe(Double element) {
+                return Double.toString(element);
+            }
+        };
     }
 
-    void setTokens(final T item, final Map<String, String> tokens);
+    static Parser<Boolean> getBooleanParser(final Boolean dValue) {
+        return new Parser<Boolean>() {
 
-    static String describeMap(final Map<String, String> tokens) {
-        final StringBuilder sb = new StringBuilder();
-        for(Map.Entry<String, String> entry : tokens.entrySet()) {
-            sb.append(" " + entry.getKey() + " : " + entry.getValue() + "\n");
-        }
-        return sb.toString();
+            @Override
+            public Boolean parse(String string) {
+                try {
+                    return Boolean.parseBoolean(string);
+                } catch (NumberFormatException e) {
+                    Logger.warn(e.getMessage(), e);
+                    return dValue;
+                }
+            }
+
+            @Override
+            public String describe(Boolean element) {
+                return Boolean.toString(element);
+            }
+        };
     }
 
-    default void throwParsingError(final String format, final Map<String, String> tokens, final String input, Exception cause) {
-        final String tokensOutput = describeMap(tokens);
-        final String message = String.format(
-                "Failed to parse the following tokens from the given text\n" +
-                "===== input =====\n" +
-                "%s\n" +
-                "===== format =====\n" +
-                "%s\n" +
-                "===== All tokens x %d =====\n" +
-                "%s",
-                input,
-                format,
-                tokens.size(),
-                tokensOutput
-            );
-            throw new RuntimeException(message, cause);
+    static Parser<Byte> getByteParser(final Byte dValue) {
+        return new Parser<Byte>() {
+
+            @Override
+            public Byte parse(String string) {
+                try {
+                    return Byte.parseByte(string);
+                } catch (NumberFormatException e) {
+                    Logger.warn(e.getMessage(), e);
+                    return dValue;
+                }
+            }
+
+            @Override
+            public String describe(Byte element) {
+                return Byte.toString(element);
+            }
+        };
     }
 
-    default Double parseDoubleOrDefault(final String string, final Double dValue) {
-        try {
-            return Double.parseDouble(string);
-        } catch (NumberFormatException e) {
-            Logger.warn(e.getMessage(), e);
-            return dValue;
-        }
+    static Parser<Short> getShortParser(final Short dValue) {
+        return new Parser<Short>() {
+
+            @Override
+            public Short parse(String string) {
+                try {
+                    return Short.parseShort(string);
+                } catch (NumberFormatException e) {
+                    Logger.warn(e.getMessage(), e);
+                    return dValue;
+                }
+            }
+
+            @Override
+            public String describe(Short element) {
+                return Short.toString(element);
+            }
+        };
     }
 
-    default Float parseFloatOrDefault(final String string, final Float dValue) {
-        try {
-            return Float.parseFloat(string);
-        } catch (NumberFormatException e) {
-            Logger.warn(e.getMessage(), e);
-            return dValue;
-        }
+    static Parser<Long> getLongParser(final Long dValue) {
+        return new Parser<Long>() {
+
+            @Override
+            public Long parse(String string) {
+                try {
+                    return Long.parseLong(string);
+                } catch (NumberFormatException e) {
+                    Logger.warn(e.getMessage(), e);
+                    return dValue;
+                }
+            }
+
+            @Override
+            public String describe(Long element) {
+                return Long.toString(element);
+            }
+        };
     }
 
-    default Boolean parseBooleanOrDefault(final String string, Boolean dValue) {
-        try {
-            return Boolean.parseBoolean(string);
-        } catch (NumberFormatException e) {
-            Logger.warn(e.getMessage(), e);
-            return dValue;
-        }
+    static Parser<Character> getCharacterParser(final Character dValue) {
+        return new Parser<Character>() {
+
+            @Override
+            public Character parse(String string) {
+                try {
+                    return string.charAt(0);
+                } catch (NumberFormatException e) {
+                    Logger.warn(e.getMessage(), e);
+                    return dValue;
+                }
+            }
+
+            @Override
+            public String describe(Character element) {
+                return Character.toString(element);
+            }
+        };
     }
 
-    default Byte parseByteOrDefault(final String string, Byte dValue) {
-        try {
-            return Byte.parseByte(string);
-        } catch (Exception e) {
-            Logger.warn(e.getMessage(), e);
-            return dValue;
-        }
-    }
-
-    default Short parseShortOrDefault(final String string, Short dValue) {
-        try {
-            return Short.parseShort(string);
-        } catch (Exception e) {
-            Logger.warn(e.getMessage(), e);
-            return dValue;
-        }
-    }
-
-    default Integer parseIntegerOrDefault(final String string, Integer dValue) {
-        try {
-            return Integer.parseInt(string);
-        } catch (Exception e) {
-            Logger.warn(e.getMessage(), e);
-            return dValue;
-        }
-    }
-
-    default Long parseLongOrDefault(final String string, Long dValue) {
-        try {
-            return Long.parseLong(string);
-        } catch (Exception e) {
-            Logger.warn(e.getMessage(), e);
-            return dValue;
-        }
-    }
-
-    default Character parseCharacterOrDefault(final String string, final Character dValue) {
-        try {
-            return string.charAt(0);
-        } catch (Exception e) {
-            Logger.warn(e.getMessage(), e);
-            return dValue;
-        }
-    }
 
 
 }

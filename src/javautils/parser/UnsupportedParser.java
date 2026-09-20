@@ -2,24 +2,14 @@ package javautils.parser;
 
 import java.util.Map;
 
-public class UnsupportedParser<T> implements Parser<T> {
+public final class UnsupportedParser<T> implements Parser<T> {
     @Override
-    public String getFormat() {
-        throw new UnsupportedOperationException("Parsing is currently not supported.");
+    public T parse(String input) {
+        throw new UnsupportedOperationException("UnsupportedParser: Parsing not supported yet.");
     }
 
     @Override
-    public Map<String, String> getTokens(T item) {
-        throw new UnsupportedOperationException("Parsing is currently not supported.");
-    }
-
-    @Override
-    public T createNewItem() {
-        throw new UnsupportedOperationException("Parsing is currently not supported.");
-    }
-
-    @Override
-    public void setTokens(T item, Map<String, String> tokens) {
-        throw new UnsupportedOperationException("Parsing is currently not supported.");
+    public String describe(T element) {
+        throw new UnsupportedOperationException("UnsupportedParser: Describing not supported yet.");
     }
 }

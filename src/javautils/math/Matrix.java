@@ -1,9 +1,11 @@
 package javautils.math;
 
-import javautils.parser.Parsable;
-import javautils.parser.Parser;
+import javautils.parser.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -24,6 +26,46 @@ public interface Matrix extends Parsable<Matrix> {
     int numCols();
 
     void init(final int numRows, final int numCols);
+
+    default void initFromRows(final List<Vector> rows) {
+        final int numRows = rows.size();
+        int numCols = 0;
+        for(Vector vector : rows) {
+            numCols = Math.max(numCols, vector.numDimensions());
+        }
+        init(numRows, numCols);
+        for(int row=0; row<numRows; row++) {
+            setRow(row, rows.get(row));
+        }
+    }
+
+    default void initFromCols(final List<Vector> cols) {
+        final int numCols = cols.size();
+        int numRows = 0;
+        for(Vector vector : cols) {
+            numRows = Math.max(numCols, vector.numDimensions());
+        }
+        init(numRows, numCols);
+        for(int col=0; col<numRows; col++) {
+            setColumn(col, cols.get(col));
+        }
+    }
+
+
+    default <T> void initFromArray(final T[][] cells, Function<T, Double> function) {
+        final int numRows = cells.length;
+        int numCols = 0;
+        for(T[] vector : cells) {
+            numCols = Math.max(numCols, vector.length);
+        }
+        init(numRows, numCols);
+        for(int row=0; row<numRows; row++) {
+            for(int col=0; col<numCols; col++) {
+                final Double value = function.apply(cells[row][col]);
+                set(row, col, value);
+            }
+        }
+    }
 
     record Cell(int row, int col) {
     }
@@ -59,11 +101,12 @@ public interface Matrix extends Parsable<Matrix> {
         }
 
         @Override
-        public void init(Double... values) {
+        public Vector init(Double... values) {
             assert values.length == numDimensions();
             for(int i=0; i<numDimensions(); i++) {
                 set(i, values[i]);
             }
+            return this;
         }
 
         @Override
@@ -268,22 +311,24 @@ public interface Matrix extends Parsable<Matrix> {
         }
     }
 
-    default String describe() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%d x %d\n", numRows(), numCols()));
-        for(int row=0; row<numRows(); row++) {
-            for(int col=0; col<numCols(); col++) {
-                sb.append(String.format("[%5.2f]", get(row, col)));
-            }
-            sb.append("\n");
-        }
-        sb.append("\n");
-        return sb.toString();
-    }
-
     @Override
     default Parser<Matrix> getParser() {
         return new MatrixParser();
     }
 
+    default List<Vector> getRows() {
+        final List<Vector> rows = new ArrayList<>();
+        for(int row=0; row<numRows(); row++) {
+            rows.add(getRow(row));
+        }
+        return rows;
+    }
+
+    default List<Vector> getColumns() {
+        final List<Vector> cols = new ArrayList<>();
+        for(int col=0; col<numCols(); col++) {
+            cols.add(getColumn(col));
+        }
+        return cols;
+    }
 }

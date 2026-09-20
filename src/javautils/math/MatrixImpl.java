@@ -65,6 +65,4 @@ public class MatrixImpl implements Matrix {
         return (Vector) getElements()[row];
     }
 
-
-
 }

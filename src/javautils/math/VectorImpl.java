@@ -1,29 +1,36 @@
 package javautils.math;
 
+import java.util.Collection;
+
 public class VectorImpl implements Vector {
 
-    public static Vector createOfDimension(int numDimensions) {
-        return new VectorImpl(new Double[numDimensions]);
-    }
 
     private Double[] elements;
 
+    public VectorImpl() {
+        init(new Double[0]);
+    }
+
     public VectorImpl(int numDimensions) {
-        this(new Double[numDimensions]);
+        init(new Double[numDimensions]);
     }
 
-    public VectorImpl(double... values) {
-        this(new Double[0]);
-        init(values);   // Old array will be replaced.
-    }
 
-    public VectorImpl(Double[] values) {
-        assert values != null;
-        this.init(values);
-    }
-
-    public final void init(Double... elements) {
+    public final Vector init(Double... elements) {
+        assert elements != null;
         this.elements = elements;
+        return this;
+    }
+
+    public final Vector init(Collection<Double> elements) {
+        assert (elements != null);
+        this.elements = new Double[elements.size()];
+        int i=0;
+        for(Double d : elements) {
+            this.elements[i] = d;
+            i++;
+        }
+        return this;
     }
 
     public final Double[] getElements() {

@@ -1,94 +1,70 @@
 package javautils.parser;
 
-import java.util.HashMap;
-import java.util.Map;
+import javautils.math.Matrix;
+import javautils.math.MatrixImpl;
+import javautils.math.Vector;
+import javautils.math.VectorImpl;
 
-public abstract class ArrayParser implements Parser<Object[]> {
-    Object[] elements;
+import java.util.*;
+import java.util.stream.Collectors;
 
-    public ArrayParser(Object... elements) {
-        this.elements = elements;
-    }
+public interface ArrayParser<Element> extends Parser<List<Element>> {
 
-    public static final String TOKEN_NUM_ELEMENTS = "numElements";
-    public static final String TOKEN_ELEMENTS = "elements";
-    public static final String FORMAT = String.format("(x{numElements}): {elements}");
+    Parser<Element> getElementParser();
 
-    @Override
-    public String getFormat() {
-        return FORMAT;
-    }
+    String getOpenTag();
+    String getCloseTag();
+    String getDelim();
 
-    @Override
-    public Map<String, String> getTokens(Object[] items) {
-        final Map<String, String> map = new HashMap<>();
-        final int len = items.length;
-        map.put(TOKEN_NUM_ELEMENTS, String.valueOf(len));
-        final StringBuilder sb = new StringBuilder();
-        for(int i=0; i<len; i++) {
-            if (i>0) {
-                sb.append(getElementDelim());
-            }
-            sb.append(getElementAsString(items[i]));
-        }
-        final String elementsToken = sb.toString();
-        map.put(TOKEN_ELEMENTS, elementsToken);
-        return map;
-    }
-
-    @Override
-    public void setTokens(Object[] items, Map<String, String> tokenMap) {
-        final int numElements;
-        final String numElementsToken = tokenMap.get(TOKEN_NUM_ELEMENTS);
-        try {
-            numElements = Integer.parseInt(numElementsToken);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Failed to parse numElements from " + numElementsToken);
+    default String describe(final Element[] elements) {
+        if (elements == null) {
+            return getOpenTag() + getCloseTag();
         }
 
-        final Object[] elements = items;
-        setElements(elements);
+        return getOpenTag()
+            + Arrays.stream(elements)
+                    .map(getElementParser()::describe)
+                    .collect(Collectors.joining(getDelim()))
+            + getCloseTag();
+    }
 
-        final String elementsToken = tokenMap.get(TOKEN_ELEMENTS);
-        final String delim = getElementDelim();
-        final String[] elementTokens = elementsToken.split(delim);
-
-        assert elementTokens.length == numElements;
-        for(int i=0; i< numElements; i++) {
-            final String elementToken = elementTokens[i];
-            try {
-                final Object element = parseElementFromString(elementToken);
-                elements[i] = element;
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to parse element[" + i + "] from " + elementToken);
-            }
+    default String describe(final List<Element> elements) {
+         if (elements == null) {
+            return getOpenTag() + getCloseTag();
         }
+
+        return getOpenTag()
+            + elements.stream()
+                    .map(getElementParser()::describe)
+                    .collect(Collectors.joining(getDelim()))
+            + getCloseTag();
     }
 
-    public String getNumToElementsDelim() {
-        return ": ";
+    default List<Element> parse(final String input) {
+        if (!input.startsWith(getOpenTag())
+                || !input.endsWith(getCloseTag())) {
+            throw new IllegalArgumentException(
+                "Invalid array format: " + input);
+        }
+
+        String content = input.substring(
+            getOpenTag().length(),
+            input.length() - getCloseTag().length());
+
+        if (content.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String[] parts = content.split(
+            java.util.regex.Pattern.quote(getDelim()));
+
+        List<Element> result = new ArrayList<>();
+
+        for (int i = 0; i < parts.length; i++) {
+            result.add(getElementParser().parse(parts[i]));
+        }
+
+        return result;
     }
 
-    public String getElementDelim() {
-        return ", ";
-    }
-
-    public abstract String getElementAsString(Object e);
-    public abstract Object parseElementFromString(String tokenValue);
-
-    public Object[] getElements() {
-        return this.elements;
-    }
-
-    public void setElements(Object... elements) {
-        assert elements != null;
-        assert elements.length >= 0;
-        this.elements = elements;
-    }
-
-
-    @Override
-    public String toString() {
-        return describe(getElements());
-    }
 }

@@ -1,52 +1,28 @@
 package javautils.parser;
 
+import javautils.Text;
+
 import java.util.*;
 
-public class ObjectParser implements Parser<Object> {
-    private Object item;
-    private Class<?> type;
+import static javautils.Text.extractTokens;
 
+public class ObjectParser implements Parser<Object> {
     public static final String TYPE_NULL = "null";
     public static final String VALUE_NULL = "null";
     public static final String FORMAT_DEFAULT = "{type} {value}";
 
-    private static final Map<Class<?>, String> FORMAT_MAP = new HashMap<>();
-    static {
-        FORMAT_MAP.put(Byte.class,FORMAT_DEFAULT);
-        FORMAT_MAP.put(Short.class, FORMAT_DEFAULT);
-        FORMAT_MAP.put(Character.class, FORMAT_DEFAULT);
-        FORMAT_MAP.put(Integer.class, FORMAT_DEFAULT);
-        FORMAT_MAP.put(Long.class, FORMAT_DEFAULT);
-        FORMAT_MAP.put(Float.class, FORMAT_DEFAULT);
-        FORMAT_MAP.put(Double.class,FORMAT_DEFAULT);
-        FORMAT_MAP.put(String.class, FORMAT_DEFAULT);
-        FORMAT_MAP.put(Boolean.class, FORMAT_DEFAULT);
-    }
-
-    public ObjectParser(Class<?> type, Object item) {
-        this.type = type;
-        this.item = item;
-    }
-
-    public static <T> ObjectParser create(Class<?> type, T value) {
-        return new ObjectParser(type, value);
-    }
-
-    public static ObjectParser create(final Object item) {
-        return  (item==null)
-                ?   new ObjectParser(null, null)
-                :   new ObjectParser(item.getClass(), item);
-    }
-
-    @Override
     public String getFormat() {
-        return FORMAT_MAP.getOrDefault(type, FORMAT_DEFAULT);
+        return FORMAT_DEFAULT;
     }
 
-    @Override
     public Map<String, String> getTokens(Object item) {
+        return getTokens(item, (item==null) ? null : item.getClass());
+    }
+
+    public Map<String, String> getTokens(Object item, Class<?> typeCls) {
+
         final Map<String, String> map = new HashMap<>();
-        String type = (this.type==null) ? TYPE_NULL : this.type.getSimpleName();
+        String type = (typeCls==null) ? TYPE_NULL : typeCls.getSimpleName();
         String value = VALUE_NULL;
         if (item!=null) {
             final Class<?> cls = item.getClass();
@@ -79,13 +55,11 @@ public class ObjectParser implements Parser<Object> {
         return map;
     }
 
-    @Override
     public Object createNewItem() {
         return null;    // This is fine for now. I might change this later.
     }
 
-    @Override
-    public void setTokens(Object item, Map<String, String> tokens) {
+    public Object parseTokens(Map<String, String> tokens) {
         final String type = tokens.get("type");
         final String value = tokens.get("value");
 
@@ -97,41 +71,45 @@ public class ObjectParser implements Parser<Object> {
             throw new RuntimeException("type token was not populated");
         }
 
-        this.item = null;
+        Object item = null;
+
         if (String.class.getSimpleName().equalsIgnoreCase(type)) {
             item = value;
         } else if (VALUE_NULL.equalsIgnoreCase(value)) {
             item = null;
         } else if (Byte.class.getSimpleName().equalsIgnoreCase(type)) {
-            item = Byte.parseByte(value);
+            item = Parser.getByteParser((byte) 0).parse(value);
         } else if (Short.class.getSimpleName().equalsIgnoreCase(type)) {
-            item = Short.parseShort(value);
+            item = Parser.getShortParser((short) 0).parse(value);
         } else if (Character.class.getSimpleName().equalsIgnoreCase(type)) {
-            item = value.charAt(0);
+            item = Parser.getCharacterParser(null).parse(value);
         } else if (Integer.class.getSimpleName().equalsIgnoreCase(type)) {
-            item = Integer.parseInt(value);
+            item = Parser.getIntegerParser(0).parse(value);
         } else if (Long.class.getSimpleName().equalsIgnoreCase(type)) {
-            item = Long.parseLong(value);
+            item = Parser.getLongParser(0L).parse(value);
         } else if (Float.class.getSimpleName().equalsIgnoreCase(type)) {
-            item = Float.parseFloat(value);
+            item = Parser.getFloatParser(0F).parse(value);
         } else if (Double.class.getSimpleName().equalsIgnoreCase(type)) {
-            item = Double.parseDouble(value);
+            item = Parser.getDoubleParser(0D).parse(value);
         } else if (Boolean.class.getSimpleName().equalsIgnoreCase(type)) {
-            item = Boolean.parseBoolean(value);
-        } else if ( this.type.getSimpleName().equalsIgnoreCase(type) && item instanceof Parsable) {
-            final Parsable p = (Parsable) item;
-            parseFromText(p, value);
+            item = Parser.getBooleanParser(false).parse(value);
         } else {
-            throw new RuntimeException("Expected type " + this.type.getSimpleName() + " but was told " + type);
+            throw new RuntimeException("Failed to parse tokens of type " + type);
         }
+        return item;
     }
 
     @Override
-    public String toString() {
-        return Objects.toString(item);
+    public Object parse(String input) {
+        final String format = getFormat();
+        final Map<String, String> tokens = extractTokens(format, input);
+        return parseTokens(tokens);
     }
 
-    public <T> T getItem() {
-        return (T) item;
+    @Override
+    public String describe(Object element) {
+        final String format = getFormat();
+        final Map<String, String> tokens = getTokens(element);
+        return Text.substituteTokens(tokens, format);
     }
 }

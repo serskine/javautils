@@ -1,7 +1,9 @@
 package javautils.math;
 
 import javautils.Logger;
-import javautils.TestUtils;
+import javautils.parser.ArrayParser;
+import javautils.parser.MatrixParser;
+import javautils.parser.VectorParser;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -13,27 +15,28 @@ import static org.junit.Assert.assertEquals;
 public class MatrixAndVectorTest {
 
     static final Random r = new Random();
+    static final VectorParser PARSER_VECTOR = new VectorParser();
+    static final MatrixParser PARSER_MATRIX = new MatrixParser();
 
     @Test
     public void testCrossProduct() {
-        Vector v1 = VectorImpl.create(1, 1);
-        Vector v2 = VectorImpl.create(2, 2);
+        Vector v1 = new VectorImpl().init(1, 1);
+        Vector v2 = new VectorImpl().init(2, 2);
     }
 
     @Test
     public void describeVector() {
-        final Vector expected = VectorImpl.create(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        final Vector expected = new VectorImpl().init(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-        final String expectedDescription = expected.describe();
+        final String expectedDescription = PARSER_VECTOR.describe(expected);
 
         Logger.info("expectedDescription = " + expectedDescription);
 
-        final Vector observed = VectorImpl.create();
-        observed.parseFromText(expectedDescription);
+        final Vector observed = PARSER_VECTOR.parse(expectedDescription);
 
         assertEquals(expected, observed);
 
-        final String observedDescription = observed.describe();
+        final String observedDescription = PARSER_VECTOR.describe(observed);
 
         Logger.info("observedDescription = " + observedDescription);
 
@@ -50,16 +53,11 @@ public class MatrixAndVectorTest {
             }
         }
 
-        final String format = expected.getFormat();
-        Logger.info("--- format ---\n" + format);
-
         final String expectedDescription = expected.describe();
 
         Logger.info("--- expectedDescription ---\n" + expectedDescription);
 
-        final Matrix observed = new MatrixImpl(10, 10);
-
-        observed.parseFromText(expectedDescription);
+        final Matrix observed = PARSER_MATRIX.parse(expectedDescription);
 
         assertEquals(expected, observed);
 
