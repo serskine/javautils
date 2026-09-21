@@ -1,4 +1,4 @@
-package javautils.ir;
+package javautils.ai.ir;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,5 +19,10 @@ public class Word extends Token implements Comparable<Word> {
             characters.add(text.charAt(i));
         }
         return characters;
+    }
+
+    @Override
+    public String toString() {
+        return text;
     }
 }

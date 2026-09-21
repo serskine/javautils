@@ -1,4 +1,4 @@
-package javautils.ir;
+package javautils.ai.ir;
 
 import java.io.Serializable;
 

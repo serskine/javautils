@@ -1,4 +1,4 @@
-package javautils.ir;
+package javautils.ai.ir;
 
 import javautils.factory.KeyGen;
 import javautils.ptree.PTree;

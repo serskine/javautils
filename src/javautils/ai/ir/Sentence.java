@@ -1,11 +1,18 @@
-package javautils.ir;
+package javautils.ai.ir;
 
-import java.sql.Array;
 import java.util.*;
 
 public class Sentence extends ArrayList<Word> implements Comparable<Sentence> {
     public Sentence(Word... words) {
         Arrays.asList(words);
+    }
+
+    public Sentence(String... words) {
+        final List<Word> tokens = new ArrayList<>();
+        for(String word : words) {
+            tokens.add(new Word(word));
+        }
+        this(tokens);
     }
 
     public Sentence(Iterable<Word> words) {
@@ -27,5 +34,17 @@ public class Sentence extends ArrayList<Word> implements Comparable<Sentence> {
         }
         final int sizeDiff = size() - o.size();
         return sizeDiff;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        for(int i=0; i<size(); i++) {
+            if (i>0) {
+                sb.append(" ");
+            }
+            sb.append(get(i));
+        }
+        return sb.toString();
     }
 }

@@ -1,4 +1,4 @@
-package javautils.ir;
+package javautils.ai.ir;
 
 public class DocumentId {
     public final String path;

@@ -1,9 +1,6 @@
 package javautils.common;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SetUtils {
@@ -32,5 +29,6 @@ public class SetUtils {
     public static <T> Set<T> difference(Set<T> a, Set<T> b) {
         return a.stream().filter(x -> !b.contains(x)).collect(Collectors.toSet());
     }
+
 
 }
