@@ -3,6 +3,10 @@ package javautils.common;
 import java.util.Arrays;
 
 public class Histogram<K> extends DefaultMap<K, Double> {
+
+    private double sum = 0D;
+
+
     public Histogram() {
         super(0D);
     }
@@ -31,5 +35,17 @@ public class Histogram<K> extends DefaultMap<K, Double> {
             histogram.increment(item, 1);
         }
         return histogram;
+    }
+
+    @Override
+    public final Double put(K key, Double value) {
+        Double prev = super.put(key, value);
+        double diff = value - prev;
+        sum += diff;
+        return prev;
+    }
+
+    public final double getTotalSum() {
+        return sum;
     }
 }

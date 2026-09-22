@@ -143,4 +143,22 @@ public class Fuzzy<K> extends DefaultMap<K, Probability> {
         return result;  // Determined the afterage fuzzy value
     }
 
+    /**
+     * Assumes all values in the histogram are positive.
+     * @param h
+     * @return
+     * @param <K>
+     */
+    public static <K> Fuzzy<K> getMarket(Histogram<K> h) {
+        Fuzzy<K> r = new Fuzzy<>();
+        final double sum = h.getTotalSum();
+        if (sum > 0D) {
+            for (K k : h.keySet()) {
+                final Double prev = h.get(k);
+                r.put(k, new Probability(prev / sum));
+            }
+        }
+        return r;
+    }
+
 }

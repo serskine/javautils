@@ -138,6 +138,23 @@ public class FuzzyTest {
 
     }
 
+    @Test
+    public void getMarket() {
+        final Histogram<String> h = new Histogram<>();
+        h.put("A", 1D);
+        h.put("B", 2D);
+        h.put("C", 3D);
+        h.put("D", 4D);
+        h.put("E", 10D);
+
+        final Fuzzy<String> observed = Fuzzy.getMarket(h);
+        assertEquals("A: ", 0.05D, observed.get("A").getValue(), 0D);
+        assertEquals("B: ", 0.1D, observed.get("B").getValue(), 0D);
+        assertEquals("C: ", 0.15D, observed.get("C").getValue(), 0D);
+        assertEquals("D: ", 0.2D, observed.get("D").getValue(), 0D);
+        assertEquals("E: ", 0.5D, observed.get("E").getValue(), 0D);
+    }
+
     static void logFuzzy(final String name, final Fuzzy<String> fuzzy) {
         Logger.info("===== " + name + " =====\n" + fuzzy.describe());
     }
