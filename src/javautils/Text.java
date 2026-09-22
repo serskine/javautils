@@ -1,11 +1,9 @@
 package javautils;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
 
 public class Text {
 
@@ -298,5 +296,19 @@ public class Text {
             }
         }
         return result;
+    }
+
+    public static <T> String describeIterable(final Iterable<T> iterable) {
+        return describeIterable(iterable, x -> Objects.toString(x));
+    }
+
+    public static <T> String describeIterable(final Iterable<T> iterable, Function<T, String> itemDescriber) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+        for(T item : iterable) {
+            sb.append(" - " + itemDescriber.apply(item) + "\n");
+        }
+        sb.append("}\n");
+        return sb.toString();
     }
 }

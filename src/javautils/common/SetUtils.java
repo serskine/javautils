@@ -30,5 +30,14 @@ public class SetUtils {
         return a.stream().filter(x -> !b.contains(x)).collect(Collectors.toSet());
     }
 
+    public static <K> Iterable<K> tail(final Iterable<K> values) {
+        return () -> {
+            Iterator<K> iterator = values.iterator();
+            if (iterator.hasNext()) {
+                iterator.next(); // skip the first element
+            }
+            return iterator;
+        };
+    }
 
 }

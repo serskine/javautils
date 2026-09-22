@@ -1,9 +1,10 @@
 package javautils.ai.ir;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class Word extends Token implements Comparable<Word> {
+public class Word extends Token implements Comparable<Word>, Iterable<Character> {
     public Word(String text) {
         super(text);
     }
@@ -24,5 +25,10 @@ public class Word extends Token implements Comparable<Word> {
     @Override
     public String toString() {
         return text;
+    }
+
+    @Override
+    public Iterator<Character> iterator() {
+        return getCharacters().iterator();
     }
 }

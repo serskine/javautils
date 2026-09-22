@@ -70,7 +70,6 @@ public class PTreeStringTest {
 
         assertEquals(3, observed.size());
 
-
     }
 
     public static String describeSet(String title, Set<Integer> set) {
