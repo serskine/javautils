@@ -1,5 +1,7 @@
 package javautils.sprites;
 
+import javautils.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -66,19 +68,29 @@ public class SpriteView extends JPanel implements Comparator<ISprite> {
     }
 
     public void renderNextFrame(final SpriteGraphics sg) {
-        final List<ISprite> toRender;
+        final int numActors;
         synchronized (lock) {
-            final int numNewSprites = Math.min(actorsPerFrame, unrenderedSprites.size());
-            renderedSprites.addAll(fetchSpritesToRender(numNewSprites));
-            toRender = new ArrayList<>(renderedSprites);
+            numActors = Math.min(actorsPerFrame, unrenderedSprites.size() + 1);
         }
-        Collections.sort(toRender, this);
+
+        Logger.info("Rendering next frame: " + numActors + " actors to render");
+
+        final List<ISprite> toRender = fetchSpritesToRender(numActors);
+        if (toRender.isEmpty()) {
+            return;
+        }
 
         final long now = System.currentTimeMillis();
 
         for (final ISprite s : toRender) {
             sg.render(s);
             s.setLastRendered(now);
+        }
+
+        synchronized (lock) {
+            for (final ISprite s : toRender) {
+                renderedSprites.add(s);
+            }
         }
     }
 
