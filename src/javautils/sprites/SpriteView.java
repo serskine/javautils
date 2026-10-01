@@ -1,7 +1,10 @@
 package javautils.sprites;
 
+import javautils.math.Range;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.*;
 import java.util.List;
 
@@ -15,6 +18,7 @@ public class SpriteView extends JPanel implements Comparator<ISprite> {
     private final Object lock = new Object();
     private int actorsPerFrame;
     private ViewController viewController;
+    private Range solidRenderRange = new Range(10D, null);
 
     public SpriteView() {
         this(DEFAULT_FPS, DEFAULT_APF );
@@ -34,9 +38,12 @@ public class SpriteView extends JPanel implements Comparator<ISprite> {
         if (viewController != null) {
             viewController.applyTransform(g2d);
         }
-
         final SpriteGraphics sg = new SpriteGraphics(g2d);
         renderNextFrame(sg);
+    }
+
+    protected final Graphics2D getGraphics2D() {
+        return (Graphics2D) super.getGraphics();
     }
 
     public final void addSprite(final Sprite sprite) {
@@ -45,21 +52,42 @@ public class SpriteView extends JPanel implements Comparator<ISprite> {
         }
     }
 
+    private boolean isSpriteRenderable(ISprite sprite) {
+        return sprite != null && sprite.isVisible() && meetsMinimumDimension(sprite);
+    }
+
+    private boolean meetsMinimumDimension(ISprite sprite) {
+        if (sprite == null || sprite.getShape() == null) {
+            return false;
+        }
+        if (solidRenderRange == null) {
+            return true;
+        }
+
+        final Rectangle2D bounds = sprite.getShape().getBounds2D();
+        final double zoom = viewController == null
+            ? 1.0
+            : Math.abs(viewController.getScale());
+        return solidRenderRange.contains(Math.min(bounds.getWidth(), bounds.getHeight()) * zoom);
+    }
+
     private List<ISprite> fetchSpritesToRender(final int max) {
         final List<ISprite> list = new ArrayList<>(max);
         synchronized (lock) {
-            for (int i = 0; i < max; i++) {
+            int i=0;
+            while (i<max) {
                 if (unrenderedSprites.isEmpty()) {
                     // swap buffers
                     final PriorityQueue<ISprite> tmp = renderedSprites;
                     renderedSprites = unrenderedSprites;
                     unrenderedSprites = tmp;
                     if (unrenderedSprites.isEmpty()) {
-                        break;
+                        break;  // no more sprites to render
                     }
                 }
                 ISprite s = unrenderedSprites.remove();
                 list.add(s);
+                i++;
             }
         }
         return list;
@@ -77,6 +105,9 @@ public class SpriteView extends JPanel implements Comparator<ISprite> {
         final long now = System.currentTimeMillis();
 
         for (final ISprite s : toRender) {
+            if (!isSpriteRenderable(s)) {
+                continue;
+            }
             sg.render(s);
             s.setLastRendered(now);
         }
@@ -97,5 +128,9 @@ public class SpriteView extends JPanel implements Comparator<ISprite> {
         if (!s1.isVisible()) return 1;
         if (s2.isVisible()) return -1;
         return 0;
+    }
+
+    public final void setSolidRenderRange(final Range solidRenderRange) {
+        this.solidRenderRange = solidRenderRange;
     }
 }

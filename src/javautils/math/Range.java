@@ -1,4 +1,4 @@
-package javautils.common;
+package javautils.math;
 
 /**
  * This class supports infinite ranges by specifying a null value
@@ -13,7 +13,7 @@ public class Range {
     public static final Range NEGATIVE_NUMBERS = new Range(null, 0D);
 
     public Range(final Number start, final Number end) {
-        if (start != null && end != null && start.doubleValue() <= end.doubleValue()) {
+        if (start==null || end==null || start.doubleValue() <= end.doubleValue()) {
             this.start = start;
             this.end = end;
         } else {

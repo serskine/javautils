@@ -1,6 +1,6 @@
 package javautils.tables;
 
-import javautils.common.Range;
+import javautils.math.Range;
 
 public class Record extends Domain<String> {
     private Range range = Range.NO_RANGE;
