@@ -104,9 +104,9 @@ public class WebCrawlerTest {
         assertTrue(wordSuggestions.contains("was"));
         assertFalse(wordSuggestions.contains("world"));
 
-        final Sentence s0 = new Sentence("the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dogs");
-        final Sentence s1 = new Sentence("stuart", "marr", "erskine", "was", "here");
-        final Sentence s2 = new Sentence("hello", "world");
+        final Sentence s0 = Sentence.create("the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dogs");
+        final Sentence s1 = Sentence.create("stuart", "marr", "erskine", "was", "here");
+        final Sentence s2 = Sentence.create("hello", "world");
         final Set<DocumentId> documentIds = predictionTrees.sentenceToDocument.getSuggestions(Arrays.asList(s0, s1, s2));
         assertEquals(1, documentIds.size());
         assertTrue(documentIds.contains(documentId));

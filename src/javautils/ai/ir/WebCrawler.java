@@ -51,7 +51,7 @@ public class WebCrawler {
                 final String sentenceText = sentence.get();
                 final List<Word> words = getWords(sentenceText);
                 if (!words.isEmpty()) {
-                    final Sentence aSentence = new Sentence(words);
+                    final Sentence aSentence = Sentence.create(words);
                     sentenceList.add(aSentence);
                 }
             }

@@ -6,6 +6,7 @@ import javautils.time.SystemTimeSource;
 import javautils.time.Ticker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -25,7 +26,6 @@ public class SpriteViewTest {
 
     private Ticker ticker;
     private ActorUpdatesManager actorUpdatesManager;
-
 
     @BeforeEach
     public void onSetup() {
@@ -79,6 +79,7 @@ public class SpriteViewTest {
         }
     }
 
+    @Disabled("Manual learning test - run only when needed")
     @Test
     public void testRendering() {
 
