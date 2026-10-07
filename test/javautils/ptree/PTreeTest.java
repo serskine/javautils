@@ -1,15 +1,14 @@
 package javautils.ptree;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static javautils.ptree.PTreeStringTest.describeMap;
 import static javautils.ptree.PTreeStringTest.describeSet;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PTreeTest {
 

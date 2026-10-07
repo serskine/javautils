@@ -6,7 +6,9 @@ import javautils.search.fringe.DepthFirstFringe;
 import javautils.search.history.SetHistory;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
@@ -43,7 +45,7 @@ public class SearchTest {
 
     private Search<State, Action> search;
 
-    @Before
+    @BeforeEach
     public void onSetup() {
         g = new Graph<>();
         g.link(State.A, State.B, Action.WALK);
@@ -64,7 +66,7 @@ public class SearchTest {
     }
 
 
-    @After
+    @AfterEach
     public void onTearDown() {
 
     }

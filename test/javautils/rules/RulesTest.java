@@ -2,12 +2,12 @@ package javautils.rules;
 
 import javautils.Logger;
 import javautils.fuzzy.Probability;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static javautils.rules.TriggerImpl.when;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RulesTest {
 
@@ -16,7 +16,7 @@ public class RulesTest {
     int numB = 0;
     int numRules = 0;
 
-    @Before
+    @BeforeEach
     public void onSetup() {
         numTrials = 100;
         numRules = 7;
@@ -24,7 +24,7 @@ public class RulesTest {
         numB = 0;
     }
 
-    @After
+    @AfterEach
     public void onTearDown() {
         Logger.info(String.format(
               "\n***\n" +

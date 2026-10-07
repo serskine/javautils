@@ -4,16 +4,12 @@ import javautils.Logger;
 import javautils.actors.ActorUpdatesManager;
 import javautils.time.SystemTimeSource;
 import javautils.time.Ticker;
-import javautils.time.TimeSource;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentListener;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.util.Random;
 
 public class SpriteViewTest {
@@ -31,7 +27,7 @@ public class SpriteViewTest {
     private ActorUpdatesManager actorUpdatesManager;
 
 
-    @Before
+    @BeforeEach
     public void onSetup() {
         ticker = new Ticker(new SystemTimeSource(), Thread.MAX_PRIORITY);
         ticker.addListener(new Ticker.Listener() {
@@ -76,7 +72,7 @@ public class SpriteViewTest {
 
     }
 
-    @After
+    @AfterEach
     public void onTearDown() throws InterruptedException {
         while(frame.isVisible()) {
             Thread.sleep(1000);
