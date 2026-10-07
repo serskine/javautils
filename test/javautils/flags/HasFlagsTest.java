@@ -1,6 +1,7 @@
 package javautils.flags;
 
-import org.junit.Before;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +10,7 @@ public class HasFlagsTest {
 
     private Flags flags;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         flags = new Flags(0);
     }

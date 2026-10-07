@@ -1,13 +1,12 @@
 package javautils.repo;
 
 import javautils.Logger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
-import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +20,7 @@ public class MemoryTest {
 
     private Memory memory;
 
-    @Before
+    @BeforeEach
     public void onSetup() throws FileNotFoundException {
         this.file = new RandomAccessFile(path, "rw");
         this.vm = new VirtualMemory(file); // Initialize with 1MB capacity
@@ -35,7 +34,7 @@ public class MemoryTest {
         Logger.info("Created AM of size: " + MEM_CAPACITY + " bytes");
     }
 
-    @After
+    @AfterEach
     public void onTearDown() {
 
         final Memory.Header header = memory.readHeader();

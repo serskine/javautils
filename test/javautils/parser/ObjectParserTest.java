@@ -1,8 +1,8 @@
 package javautils.parser;
 
 import javautils.Logger;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class ObjectParserTest {
 
     private ObjectParser parser;
 
-    @Before
+    @BeforeEach
     public void onSetup() {
 
         items = new ArrayList<>();
@@ -38,7 +38,7 @@ public class ObjectParserTest {
 
     }
 
-    @After
+    @AfterEach
     public void onTearDown() {
 
     }

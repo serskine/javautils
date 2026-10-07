@@ -1,7 +1,7 @@
 package javautils.ai.ir;
 
 import javautils.Logger;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -16,7 +16,7 @@ public class WebCrawlerTest {
 
     private WebCrawler webCrawler;
 
-    @Before
+    @BeforeEach
     public void onSetup() {
         webCrawler = new WebCrawler();
     }

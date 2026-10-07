@@ -2,7 +2,7 @@ package javautils.fuzzy;
 
 import javautils.Logger;
 import javautils.rules.Trigger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static javautils.rules.TriggerImpl.when;
 import static javautils.fuzzy.Probability.or;
