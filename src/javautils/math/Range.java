@@ -61,4 +61,16 @@ public class Range {
             return end.doubleValue() - start.doubleValue();
         }
     }
+
+    public Double snapToRange(Double value) {
+        if (start==null && end==null) {
+            return value;
+        } else if (end==null) {
+            return (end==null || start.doubleValue() >= value.doubleValue()) ? start.doubleValue() : value;
+        } else if (start==null) {
+            return (start==null || end.doubleValue() <= value.doubleValue()) ? end.doubleValue() : value;
+        } else {
+            return Math.max(start.doubleValue(), Math.min(end.doubleValue(), value.doubleValue()));
+        }
+    }
 }
