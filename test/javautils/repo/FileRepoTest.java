@@ -1,8 +1,8 @@
 package javautils.repo;
 
 import javautils.Logger;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class FileRepoTest {
     private TestNode theNode;
 
 
-    @Before
+    @BeforeEach
     public void onSetup() throws FileNotFoundException {
         this.file = new RandomAccessFile(path, "rw");
         this.repo = new FileRepo(file);

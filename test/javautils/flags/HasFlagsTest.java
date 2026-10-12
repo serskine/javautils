@@ -1,15 +1,16 @@
 package javautils.flags;
 
-import org.junit.Before;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HasFlagsTest {
 
     private Flags flags;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         flags = new Flags(0);
     }
@@ -34,7 +35,7 @@ public class HasFlagsTest {
     public void testIsFlagTrue() {
         flags = new Flags(0xFFFFFFFF);
         for (int i = 0; i < Flags.NUM_BITS; i++) {
-            assertTrue("Flag " + i + " should be true", flags.isFlag(i));
+            assertTrue(flags.isFlag(i), "Flag " + i + " should be true");
         }
     }
 
@@ -42,7 +43,7 @@ public class HasFlagsTest {
     public void testIsFlagFalse() {
         flags = new Flags(0x00000000);
         for (int i = 0; i < Flags.NUM_BITS; i++) {
-            assertFalse("Flag " + i + " should be false", flags.isFlag(i));
+            assertFalse(flags.isFlag(i), "Flag " + i + " should be false");
         }
     }
 
@@ -51,9 +52,9 @@ public class HasFlagsTest {
         flags = new Flags(0xAAAAAAAA);
         for (int i = 0; i < Flags.NUM_BITS; i++) {
             if (i % 2 == 1) {
-                assertTrue("Flag " + i + " should be true", flags.isFlag(i));
+                assertTrue(flags.isFlag(i), "Flag " + i + " should be true");
             } else {
-                assertFalse("Flag " + i + " should be false", flags.isFlag(i));
+                assertFalse(flags.isFlag(i), "Flag " + i + " should be false");
             }
         }
     }
@@ -70,12 +71,10 @@ public class HasFlagsTest {
 
     @Test
     public void testIsFlagOutOfBoundsTooHigh() {
-        try {
-            flags.isFlag(Flags.NUM_BITS);
-            fail("Expected IndexOutOfBoundsException for isFlag(NUM_BITS)");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-        }
+        assertThrows(
+            IndexOutOfBoundsException.class,
+            () -> flags.isFlag(Flags.NUM_BITS),
+            "Expected IndexOutOfBoundsException for isFlag(NUM_BITS)");
     }
 
     // setFlag tests

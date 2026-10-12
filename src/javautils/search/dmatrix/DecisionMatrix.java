@@ -55,11 +55,22 @@ public class DecisionMatrix<State, Action> {
 
     //----- Maintaining contents -----//
 
+    /**
+     * Adds a possible outcome to an action
+     * @param action is the action performed
+     * @param state is the resultant state after performing the action
+     * @param outcome gived the probability and value measurements for the state.
+     */
     public void addOutcome(Action action, State state, Outcome outcome) {
         final Map<State, Outcome> map = matrix.put(action, new HashMap<>());
         map.put(state, outcome);
     }
 
+    /**
+     * Removes a possible state from the list of possible outcomes for a given action
+     * @param action the action performed to get to the given state
+     * @param state the resultant expected state from that action
+     */
     public void removeOutcome(Action action, State state) {
         final Map<State, Outcome> stateOutcomes = matrix.get(action);
         if (stateOutcomes != null) {
@@ -70,6 +81,12 @@ public class DecisionMatrix<State, Action> {
         }
     }
 
+    /**
+     * This will retreive the probability and value measurements for a given outcome
+     * @param action is the action performed
+     * @param state is the resultant state
+     * @return an {@link Outcome}
+     */
     public Outcome getOutcome(Action action, State state) {
         final Map<State, Outcome> stateOutcomeMap = getActionOutcomes(action);
         final Outcome outcome = stateOutcomeMap.get(state);
@@ -80,26 +97,51 @@ public class DecisionMatrix<State, Action> {
     }
 
 
+    /**
+     * Assumes the most preferable option will occur
+     * @param action is the action performed
+     * @return the resultant state paired with it's outcome measurements
+     */
     public final Pair<State, Outcome> getHighestValue(Action action) {
         return new Pair(getActionOutcomesOrThrow(action).entrySet().stream()
             .max((e1, e2) -> Double.compare(e1.getValue().value, e2.getValue().value)).get());
     }
 
+    /**
+     * Assumes the least preferable option will occur
+     * @param action is the action performed
+     * @return the resultant state paired with it's outcome measurements
+     */
     public final Pair<State, Outcome> getLowestValue(Action action) {
         return new Pair(getActionOutcomesOrThrow(action).entrySet().stream()
                 .max((e1, e2) -> Double.compare(e2.getValue().value, e1.getValue().value)).get());
     }
 
+    /**
+     * Provides the outcome with the highest expected value
+     * @param action is the action performed
+     * @return the resultant state paired with it's outcome measurements
+     */
     public final Pair<State, Outcome> getHighestExpectedValue(Action action) {
         return new Pair(getActionOutcomesOrThrow(action).entrySet().stream()
                 .max((e1, e2) -> Double.compare(e1.getValue().expectedValue, e2.getValue().expectedValue)).get());
     }
 
+    /**
+     * Provides the outcome with the lowest expected value
+     * @param action is the action performed
+     * @return the resultant state paired with it's outcome measurements
+     */
     public final Pair<State, Outcome> getLowestExpectedValue(Action action) {
         return new Pair(getActionOutcomesOrThrow(action).entrySet().stream()
                 .max((e1, e2) -> Double.compare(e2.getValue().expectedValue, e1.getValue().expectedValue)).get());
     }
 
+    /**
+     * Provides a market containing all the possible Outcomes for an action
+     * @param action is the action performed
+     * @return the resultant state paired with it's outcome measurements
+     */
     public final Market<State> getOutcomes(final Action action) {
         final Market<State> market = new Market<>();
         getActionOutcomesOrThrow(action).entrySet().forEach(e -> {
@@ -108,6 +150,11 @@ public class DecisionMatrix<State, Action> {
         return market;
     }
 
+    /**
+     * Calculates the expected value of an action
+     * @param action is the action performed
+     * @return is the expected value pased on probability and value measurements
+     */
     public double getActionExpectedValue(Action action) {
         return getActionOutcomesOrThrow(action).entrySet().stream().mapToDouble(e -> e.getValue().expectedValue).sum();
     }

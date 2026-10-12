@@ -2,10 +2,10 @@ package javautils.fuzzy;
 
 import javautils.Logger;
 import javautils.common.Histogram;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static javautils.fuzzy.Fuzzy.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FuzzyTest {
     public static String STUART = "STUART";
@@ -104,9 +104,9 @@ public class FuzzyTest {
 
         final Fuzzy<String> avg = Fuzzy.average(f1, f2, f3);
 
-        assertEquals("Fuzzy A: ", 1.25D/3D, avg.get("A").getValue(), 0D);
-        assertEquals("Fuzzy B: ",1.50D/3D, avg.get("B").getValue(), 0D);
-        assertEquals("Fuzzy C: ",1.75D/3D, avg.get("C").getValue(), 0D);
+        assertEquals(1.25D/3D, avg.get("A").getValue(), 0D, "Fuzzy A: ");
+        assertEquals(1.50D/3D, avg.get("B").getValue(), 0D, "Fuzzy B: ");
+        assertEquals(1.75D/3D, avg.get("C").getValue(), 0D, "Fuzzy C: ");
 
 
     }
@@ -132,9 +132,9 @@ public class FuzzyTest {
         h.put(f2, 1D);
 
         Fuzzy<String> avg2 = Fuzzy.average(h);
-        assertEquals("A: ", expected.get("A").getValue(), avg2.get("A").getValue(), 0D);
-        assertEquals("B: ", expected.get("B").getValue(), avg2.get("B").getValue(), 0D);
-        assertEquals("C: ", expected.get("C").getValue(), avg2.get("C").getValue(), 0D);
+        assertEquals(expected.get("A").getValue(), avg2.get("A").getValue(), 0D, "A: ");
+        assertEquals(expected.get("B").getValue(), avg2.get("B").getValue(), 0D, "B: ");
+        assertEquals(expected.get("C").getValue(), avg2.get("C").getValue(), 0D, "C: ");
 
     }
 
@@ -148,11 +148,11 @@ public class FuzzyTest {
         h.put("E", 10D);
 
         final Fuzzy<String> observed = Fuzzy.getMarket(h);
-        assertEquals("A: ", 0.05D, observed.get("A").getValue(), 0D);
-        assertEquals("B: ", 0.1D, observed.get("B").getValue(), 0D);
-        assertEquals("C: ", 0.15D, observed.get("C").getValue(), 0D);
-        assertEquals("D: ", 0.2D, observed.get("D").getValue(), 0D);
-        assertEquals("E: ", 0.5D, observed.get("E").getValue(), 0D);
+        assertEquals(0.05D, observed.get("A").getValue(), 0D, "A: ");
+        assertEquals(0.1D, observed.get("B").getValue(), 0D, "B: ");
+        assertEquals(0.15D, observed.get("C").getValue(), 0D, "C: ");
+        assertEquals(0.2D, observed.get("D").getValue(), 0D, "D: ");
+        assertEquals(0.5D, observed.get("E").getValue(), 0D, "E: ");
     }
 
     static void logFuzzy(final String name, final Fuzzy<String> fuzzy) {

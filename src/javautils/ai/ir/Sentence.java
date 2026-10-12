@@ -3,19 +3,20 @@ package javautils.ai.ir;
 import java.util.*;
 
 public class Sentence extends ArrayList<Word> implements Comparable<Sentence> {
-    public Sentence(Word... words) {
-        Arrays.asList(words);
+
+    public static Sentence create(Word... words)    {  return new Sentence(words);      }
+    public static Sentence create(String... words)  {  return new Sentence(words);      }
+    public static Sentence create(Iterable<Word> words) { return new Sentence(words);   }
+
+    private Sentence(Word[] words) {
+        this(Arrays.asList(words));
     }
 
-    public Sentence(String... words) {
-        final List<Word> tokens = new ArrayList<>();
-        for(String word : words) {
-            tokens.add(new Word(word));
-        }
-        this(tokens);
+    private Sentence(String[] words) {
+        this(Arrays.asList(words).stream().map(wordText -> new Word(wordText)).toList());
     }
 
-    public Sentence(Iterable<Word> words) {
+    private Sentence(Iterable<Word> words) {
         clear();
         for(Word word : words) {
             add(word);

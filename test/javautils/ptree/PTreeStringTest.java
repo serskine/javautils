@@ -1,14 +1,15 @@
 package javautils.ptree;
 
 import javautils.Logger;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PTreeStringTest {
 
@@ -24,7 +25,7 @@ public class PTreeStringTest {
 
     public static final int NUM_WORDS = 1000000;
 
-    @Before
+    @BeforeEach
     public void onSetup() {
         map = new HashMap<>();
         reverseMap = new HashMap<>();

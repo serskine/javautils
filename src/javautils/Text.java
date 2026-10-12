@@ -1,5 +1,7 @@
 package javautils;
 
+import javautils.math.Range;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -310,5 +312,9 @@ public class Text {
         }
         sb.append("}\n");
         return sb.toString();
+    }
+
+    public static String substring(final String content, Range r) {
+        return content.substring(r.start.intValue(), r.end.intValue());
     }
 }

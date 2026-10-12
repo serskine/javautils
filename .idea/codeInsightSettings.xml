@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaProjectCodeInsightSettings">
+    <included-static-names>
+      <name>java.lang.Double.parseDouble</name>
+      <name>org.junit.Assert.assertEquals</name>
+      <name>org.junit.Assert</name>
+    </included-static-names>
+  </component>
+</project>

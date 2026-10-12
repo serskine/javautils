@@ -1,8 +1,8 @@
 package javautils.ai.ir;
 
 import javautils.Logger;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,13 +10,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WebCrawlerTest {
 
     private WebCrawler webCrawler;
 
-    @Before
+    @BeforeEach
     public void onSetup() {
         webCrawler = new WebCrawler();
     }
@@ -104,9 +104,9 @@ public class WebCrawlerTest {
         assertTrue(wordSuggestions.contains("was"));
         assertFalse(wordSuggestions.contains("world"));
 
-        final Sentence s0 = new Sentence("the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dogs");
-        final Sentence s1 = new Sentence("stuart", "marr", "erskine", "was", "here");
-        final Sentence s2 = new Sentence("hello", "world");
+        final Sentence s0 = Sentence.create("the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dogs");
+        final Sentence s1 = Sentence.create("stuart", "marr", "erskine", "was", "here");
+        final Sentence s2 = Sentence.create("hello", "world");
         final Set<DocumentId> documentIds = predictionTrees.sentenceToDocument.getSuggestions(Arrays.asList(s0, s1, s2));
         assertEquals(1, documentIds.size());
         assertTrue(documentIds.contains(documentId));

@@ -11,12 +11,6 @@ import java.util.List;
 /**
  * Announcer provides a proxy of the listener interface that, when a method
  * is invoked on the proxy, forwards the invocation to all registered listeners.
- *
- * Usage:
- * Announcer<MyListener> a = new Announcer<>(MyListener.class);
- * a.addListener(listener1);
- * a.addListener(listener2);
- * a.announce().onEvent(...); // calls onEvent on listener1 and listener2
  */
 public class Announcer<T extends EventListener> {
 
