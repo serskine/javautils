@@ -19,9 +19,9 @@ public class RollTablesTest {
 
         final Table rarityTable = rollTables.createTable("rarity",
             new Roll(0, new Die(6)),
-            new Record(new Range(1,3), "common", 1, false),
-            new Record(new Range(4,2), "uncommon", 1, false),
-            new Record(new Range(6,1), "rare", 1, false)
+            new Record(new HitRange(1,3), "common", 1, false),
+            new Record(new HitRange(4,2), "uncommon", 1, false),
+            new Record(new HitRange(6,1), "rare", 1, false)
         );
     }
 

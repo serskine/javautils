@@ -1,27 +1,22 @@
 package javautils.rolltable;
 
-import javautils.Text;
-import javautils.parser.Parsable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Record {
-    private Range range;
+    private HitRange range;
     private String result;
     private int qty;
     private boolean isReroll;
 
     public static final String FORMAT = "{range}{qty} x {result} isReroll={isReroll}";
 
-    public Record(final Range range, final String result, final int qty, final boolean isReroll) {
+    public Record(final HitRange range, final String result, final int qty, final boolean isReroll) {
         this.range = range;
         this.result = result;
         this.qty = qty;
         this.isReroll = isReroll;
     }
 
-    public Range getRange() {
+    public HitRange getRange() {
         return range;
     }
 

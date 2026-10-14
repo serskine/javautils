@@ -17,6 +17,13 @@
     <pattern value="javautils.math.Matrix" method="multiply" />
     <pattern value="javautils.math.Matrix" method="rowStream" />
     <pattern value="javautils.math.Matrix" method="scale" />
+    <pattern value="javautils.common.graph.Graph" method="getEdgesTo" />
+    <pattern value="javautils.common.graph.Graph" method="getEditableEdgeSet" />
+    <pattern value="javautils.common.graph.Graph" method="getEditableVertexSet" />
+    <pattern value="javautils.common.graph.Graph" method="isLinked" />
+    <pattern value="javautils.common.graph.Graph" method="linkBothWays" />
+    <pattern value="javautils.common.graph.Graph" method="unlinkBothWays" />
+    <pattern value="javautils.common.graph.AdvancedGraphImpl" method="AdvancedGraphImpl" />
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MavenProjectsManager">
