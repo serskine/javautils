@@ -3,7 +3,7 @@ package javautils.common.graph;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GraphImpl<Vertex> implements Graph<Vertex> {
+public class GraphImpl<Vertex> implements EditableGraph<Vertex> {
     private final Map<Vertex, Set<Vertex>> childMap;
     private final Map<Vertex, Set<Vertex>> parentMap;
     private final Set<Vertex> allVertices;
