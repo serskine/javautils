@@ -59,8 +59,8 @@ public class SmtpMailerMailpitTest {
 
     @Test
     public void testImap() {
-        final ImapClient imapClient = new ImapClientImpl(HOST, PORT, USERNAME, PASSWORD);
 
+        final ImapClient imapClient = new ImapClientImpl("imap.gmail.com", 993, null, null);
 
         final List<Email> unreadEmail = imapClient.getUnreadMessages();
         unreadEmail.stream().forEach( email -> Logger.info(email.toString()));
