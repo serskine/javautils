@@ -64,6 +64,11 @@ public class SmtpMailer implements Mailer {
         }
     }
 
+    @Override
+    public List<Email> getMessages() {
+        throw new UnsupportedOperationException("TODO: Implement.");
+    }
+
     private String buildMimeMessage(Email email) throws IOException {
         StringBuilder sb = new StringBuilder();
 

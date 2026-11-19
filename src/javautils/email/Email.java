@@ -1,14 +1,15 @@
 package javautils.email;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class Email {
+
+    private static final String CRLF = "\r\n";
 
     private final String from;
     private final List<String> to;
@@ -126,5 +127,46 @@ public class Email {
             }
             return new Email(this);
         }
+    }
+
+    private static String encodeBase64Mime(byte[] bytes) {
+        return Base64.getMimeEncoder(76, CRLF.getBytes(StandardCharsets.US_ASCII)).encodeToString(bytes);
+    }
+
+    private static String encodeHeaderValue(String text) {
+        // Use simple ASCII if all characters are standard printable ASCII
+        boolean isAscii = text.chars().allMatch(c -> c >= 32 && c <= 126);
+        if (isAscii) {
+            return text;
+        }
+        // RFC 2047 UTF-8 Base64 encoding for non-ASCII subjects/filenames
+        String b64 = Base64.getEncoder().encodeToString(text.getBytes(StandardCharsets.UTF_8));
+        return "=?UTF-8?B?" + b64 + "?=";
+    }
+
+    /**
+     * Desxcribes the header only.
+     * @return
+     */
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+
+        // Standard RFC 5322 Headers
+        sb.append("Date: ").append(DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now())).append(CRLF);
+        sb.append("From: ").append(getFrom()).append(CRLF);
+        sb.append("To: ").append(String.join(", ", getTo())).append(CRLF);
+
+        if (!getCc().isEmpty()) {
+            sb.append("Cc: ").append(String.join(", ", getCc())).append(CRLF);
+        }
+        if (getReplyTo() != null) {
+            sb.append("Reply-To: ").append(getReplyTo()).append(CRLF);
+        }
+        if (getSubject() != null) {
+            sb.append("Subject: ").append(encodeHeaderValue(getSubject())).append(CRLF);
+        }
+
+        return sb.toString();
     }
 }
