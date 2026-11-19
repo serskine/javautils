@@ -9,7 +9,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GraphTest {
-    private Graph<String> graph;
+    private GraphImpl<String> graph;
 
     private String A = "A";
     private String B = "B";

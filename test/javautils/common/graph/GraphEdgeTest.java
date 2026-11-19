@@ -1,23 +1,18 @@
 package javautils.common.graph;
 
-import javautils.common.CollectionTest;
 import javautils.common.SetTest;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class GraphEdgeTest extends SetTest<Edge<String>> {
 
     @Override
     protected Collection<Edge<String>> createCollection() {
-        final Graph<String> graph = new GraphImpl<>();
+        final GraphImpl<String> graph = new GraphImpl<>();
         graph.addVertex("A");
         graph.addVertex("B");
         graph.addVertex("C");
-        return graph.getEditableEdgeSet();
+        return graph.getAllEdges();
     }
 
     @Override
